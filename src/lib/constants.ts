@@ -34,6 +34,12 @@ export const FEATURES = [
       "Civil twilight started at 6:12. The dawn overlay confirms daylight for your ride window. Seasonal shifts accounted for automatically. Time to ride.",
     mockup: "/mockups/notification.webp",
   },
+  {
+    time: "7:00 AM",
+    title: "You ride.",
+    description:
+      "The wind is exactly where VeloVane said it would be. Headwind out, tailwind back. 52\u00B0 at departure, warming to 58\u00B0 by the time you roll home. Every number checks out.",
+  },
 ];
 
 export const PLATFORM_CARDS = [

@@ -1,3 +1,4 @@
+@import "mapbox-gl/dist/mapbox-gl.css";
 @import "tailwindcss";
 
 @theme inline {
@@ -97,6 +98,18 @@ body {
     transparent 2px,
     transparent 8px
   );
+}
+
+/* Marker ring pulse */
+@media (prefers-reduced-motion: no-preference) {
+  .marker-ring-pulse {
+    animation: ring-pulse 3s ease-in-out infinite;
+  }
+}
+
+@keyframes ring-pulse {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.25; }
 }
 
 /* Section transitions */

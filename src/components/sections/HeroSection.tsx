@@ -94,10 +94,10 @@ export function HeroSection() {
         <line x1="96%" y1="5%" x2="96%" y2="8.5%" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5" />
 
         {/* ── Section annotations (text in title block) ── */}
-        <text x="5%" y="7.4%" fill="rgba(255,255,255,0.06)" fontSize="8" fontFamily="var(--font-mono)" letterSpacing="0.08em">S 01 · IDENT</text>
-        <text x="44%" y="7.4%" fill="rgba(255,255,255,0.06)" fontSize="8" fontFamily="var(--font-mono)" letterSpacing="0.08em">S 02 · ATMOSPHERIC</text>
-        <text x="83%" y="7.4%" fill="rgba(255,255,255,0.06)" fontSize="8" fontFamily="var(--font-mono)" letterSpacing="0.08em">S 03 · WIND</text>
-        <text x="63%" y="7.4%" fill="rgba(255,255,255,0.05)" fontSize="7" fontFamily="var(--font-mono)" letterSpacing="0.08em" textAnchor="start">DWG VV-001 REV C</text>
+        <text x="5%" y="7.4%" fill="rgba(255,255,255,0.14)" fontSize="8" fontFamily="var(--font-mono)" letterSpacing="0.08em">S 01 · IDENT</text>
+        <text x="44%" y="7.4%" fill="rgba(255,255,255,0.14)" fontSize="8" fontFamily="var(--font-mono)" letterSpacing="0.08em">S 02 · ATMOSPHERIC</text>
+        <text x="83%" y="7.4%" fill="rgba(255,255,255,0.14)" fontSize="8" fontFamily="var(--font-mono)" letterSpacing="0.08em">S 03 · WIND</text>
+        <text x="63%" y="7.4%" fill="rgba(255,255,255,0.12)" fontSize="7" fontFamily="var(--font-mono)" letterSpacing="0.08em" textAnchor="start">DWG VV-001 REV C</text>
 
         {/* ── Full-height vertical column lines (H2 to H9) ── */}
         <line x1="4%" y1="8.5%" x2="4%" y2="98.8%" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5" />
@@ -115,8 +115,8 @@ export function HeroSection() {
         <line x1="2%" y1="85%" x2="98%" y2="85%" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5" />
 
         {/* ── Footer zone section labels ── */}
-        <text x="5%" y="84%" fill="rgba(255,255,255,0.05)" fontSize="7" fontFamily="var(--font-mono)" letterSpacing="0.08em">S 04 · POSITION</text>
-        <text x="44%" y="84%" fill="rgba(255,255,255,0.05)" fontSize="7" fontFamily="var(--font-mono)" letterSpacing="0.08em">S 05 · THERMAL</text>
+        <text x="5%" y="84%" fill="rgba(255,255,255,0.12)" fontSize="7" fontFamily="var(--font-mono)" letterSpacing="0.08em">S 04 · POSITION</text>
+        <text x="44%" y="84%" fill="rgba(255,255,255,0.12)" fontSize="7" fontFamily="var(--font-mono)" letterSpacing="0.08em">S 05 · THERMAL</text>
 
         {/* ── Intersection tick marks at data anchor points ── */}
         {/* TEMP node (V2, H3) */}
