@@ -154,7 +154,7 @@ export function HeroSection() {
       {/* Scattered weather data HUD — small animated labels */}
       <WeatherDataOverlay />
 
-      <div className="relative z-10 mr-auto flex min-h-dvh w-full max-w-[1200px] flex-col px-5 ml-[max(0px,calc((100vw-1200px)/2-200px))]">
+      <div className="relative z-10 mr-auto flex min-h-dvh w-full max-w-[1200px] flex-col px-5 md:pl-[5vw] ml-[max(0px,calc((100vw-1200px)/2-200px))]">
         {/* Logo pinned near top */}
         <motion.div
           {...anim(0)}

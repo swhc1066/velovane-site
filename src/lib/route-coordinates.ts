@@ -64,6 +64,99 @@ export const ROUTE_COORDS: [number, number][] = [
   [3.41944, 50.38208],
 ];
 
+/* ------------------------------------------------------------------ */
+/*  Bearing & wind-relation utilities                                  */
+/* ------------------------------------------------------------------ */
+
+/** Compute bearing (degrees, 0=N clockwise) from one coordinate to another. */
+export function computeBearing(
+  [lon1, lat1]: [number, number],
+  [lon2, lat2]: [number, number],
+): number {
+  const toRad = Math.PI / 180;
+  const φ1 = lat1 * toRad;
+  const φ2 = lat2 * toRad;
+  const Δλ = (lon2 - lon1) * toRad;
+  const x = Math.sin(Δλ) * Math.cos(φ2);
+  const y =
+    Math.cos(φ1) * Math.sin(φ2) -
+    Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+  return ((Math.atan2(x, y) * 180) / Math.PI + 360) % 360;
+}
+
+/**
+ * Precompute rider bearing at evenly-spaced path percentages (0–1).
+ * Returns an array of { pct, bearing } sorted by pct.
+ */
+export function precomputeBearings(
+  coords: [number, number][],
+): { pct: number; bearing: number }[] {
+  // Compute cumulative distances
+  const dists: number[] = [0];
+  for (let i = 1; i < coords.length; i++) {
+    const [lon1, lat1] = coords[i - 1];
+    const [lon2, lat2] = coords[i];
+    const toRad = Math.PI / 180;
+    const dLat = (lat2 - lat1) * toRad;
+    const dLon = (lon2 - lon1) * toRad;
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1 * toRad) * Math.cos(lat2 * toRad) * Math.sin(dLon / 2) ** 2;
+    const d = 2 * 6_371_000 * Math.asin(Math.sqrt(a));
+    dists.push(dists[i - 1] + d);
+  }
+  const total = dists[dists.length - 1];
+  const result: { pct: number; bearing: number }[] = [];
+  for (let i = 1; i < coords.length; i++) {
+    const seg = dists[i] / total;
+    const b = computeBearing(coords[i - 1], coords[i]);
+    if (dists[i] - dists[i - 1] > 15) {
+      // skip tiny segments
+      result.push({ pct: seg, bearing: b });
+    }
+  }
+  return result;
+}
+
+/**
+ * Get rider bearing at a given path percentage by interpolating precomputed bearings.
+ */
+export function bearingAtPct(
+  bearings: { pct: number; bearing: number }[],
+  pct: number,
+): number {
+  if (bearings.length === 0) return 0;
+  if (pct <= bearings[0].pct) return bearings[0].bearing;
+  if (pct >= bearings[bearings.length - 1].pct)
+    return bearings[bearings.length - 1].bearing;
+  for (let i = 1; i < bearings.length; i++) {
+    if (pct <= bearings[i].pct) {
+      return bearings[i].bearing; // step function — use segment bearing
+    }
+  }
+  return bearings[bearings.length - 1].bearing;
+}
+
+/**
+ * Returns wind relation: "Headwind" | "Tailwind" | "Crosswind"
+ * windFromDeg: direction wind blows FROM (meteorological convention)
+ * riderBearing: direction rider is heading (0=N, 90=E, etc.)
+ */
+export function getWindRelation(
+  windFromDeg: number,
+  riderBearing: number,
+): "Headwind" | "Tailwind" | "Crosswind" {
+  const windToward = (windFromDeg + 180) % 360;
+  const angle = ((riderBearing - windToward + 540) % 360) - 180; // -180 to 180
+  const cosAngle = Math.cos((angle * Math.PI) / 180);
+  if (cosAngle > 0.35) return "Tailwind";
+  if (cosAngle < -0.35) return "Headwind";
+  return "Crosswind";
+}
+
+/** Precomputed bearings for the route — computed once at module level. */
+export const ROUTE_BEARINGS = precomputeBearings(ROUTE_COORDS);
+
 export const WAYPOINT_COORDS: Record<string, { lngLat: [number, number]; label: string; coord: string }> = {
   ARENBERG: {
     lngLat: [3.41944, 50.38208],

@@ -3,7 +3,6 @@
 import { useRef, useEffect, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { FEATURES } from "@/lib/constants";
-import { RideMapPanel } from "./RideMapPanel";
 
 const ease = [0.25, 0.46, 0.45, 0.94] as [number, number, number, number];
 
@@ -456,7 +455,6 @@ export function FeaturesSection() {
         <WindPanel />
         <TempPanel />
         <TimelinePanel />
-        <RideMapPanel />
       </div>
     </section>
   );

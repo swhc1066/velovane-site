@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { motion, useReducedMotion, useInView } from "framer-motion";
+import { motion, useReducedMotion, useTransform, type MotionValue } from "framer-motion";
 import { useScrollProgress } from "@/hooks/useScrollProgress";
 import { RideMapSvg } from "../ui/RideMapSvg";
 import { RideWeatherData } from "../ui/RideWeatherData";
-import { FEATURES } from "@/lib/constants";
+import { RIDE_NARRATIVE } from "@/lib/constants";
 import { ROUTE_COORDS, WAYPOINT_COORDS } from "@/lib/route-coordinates";
 import { buildSvgPath, projectWaypoints } from "@/lib/map-projection";
 import type mapboxgl from "mapbox-gl";
@@ -16,14 +16,58 @@ const MapboxBackground = dynamic(
   { ssr: false },
 );
 
-const EASE = [0.25, 0.46, 0.45, 0.94] as [number, number, number, number];
-const RIDE_FEATURE = FEATURES[5]; // "You ride."
+/* ------------------------------------------------------------------ */
+/*  Dynamic text card                                                  */
+/* ------------------------------------------------------------------ */
+
+function DynamicTextCard({ progress }: { progress: MotionValue<number> }) {
+  const narrativeIndex = useTransform(progress, (p) => {
+    for (let i = RIDE_NARRATIVE.length - 1; i >= 0; i--) {
+      if (p >= RIDE_NARRATIVE[i].progressRange[0]) return i;
+    }
+    return 0;
+  });
+
+  const time = useTransform(narrativeIndex, (i) => RIDE_NARRATIVE[i]?.time ?? "");
+  const title = useTransform(narrativeIndex, (i) => RIDE_NARRATIVE[i]?.title ?? "");
+  const description = useTransform(narrativeIndex, (i) => RIDE_NARRATIVE[i]?.description ?? "");
+
+  // Accent color matches the data card progression
+  const accentColor = useTransform(progress, (p) => {
+    if (p < 0.40) return "#3b82f6";
+    if (p < 0.52) return "#eab308";
+    return "#ef4444";
+  });
+
+  // Single card body — parent controls positioning and width.
+  return (
+    <motion.div
+      className="w-full rounded-xl border border-white/10 bg-surface-card/80 p-4 shadow-lg backdrop-blur-sm md:order-1 md:h-full md:p-5 xl:h-auto xl:rounded-2xl xl:p-6 xl:order-none"
+      style={{ borderTopColor: accentColor, borderTopWidth: "2px" }}
+    >
+      <motion.div
+        className="mb-1 font-mono text-[10px] font-medium tracking-wider md:mb-1 md:text-[11px] xl:mb-1.5 xl:text-[13px]"
+        style={{ color: accentColor }}
+      >
+        {time}
+      </motion.div>
+      <motion.h3 className="mb-1.5 font-mono text-lg font-medium leading-tight text-white md:mb-2 md:text-xl xl:mb-3 xl:text-2xl">
+        {title}
+      </motion.h3>
+      <motion.p className="font-mono text-[10px] font-light leading-relaxed text-n-400 md:text-xs xl:text-sm">
+        {description}
+      </motion.p>
+    </motion.div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Main panel                                                         */
+/* ------------------------------------------------------------------ */
 
 export function RideMapPanel() {
   const shouldReduceMotion = useReducedMotion() ?? false;
   const scrollRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const textInView = useInView(textRef, { once: true, amount: 0.3 });
 
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -60,15 +104,6 @@ export function RideMapPanel() {
     },
     [projectRoute],
   );
-
-  const anim = (delay: number) =>
-    shouldReduceMotion
-      ? {}
-      : {
-          initial: { opacity: 0, y: 24 },
-          animate: textInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 },
-          transition: { duration: 0.7, delay, ease: EASE },
-        };
 
   return (
     <>
@@ -169,43 +204,21 @@ export function RideMapPanel() {
             <line x1="96%" y1="84%" x2="96%" y2="86%" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5" />
           </svg>
 
-          {/* LAYER 3 — Data card (anchored below ARENBERG) */}
-          <div className="pointer-events-none absolute inset-0 z-[3]">
+          {/* LAYER 3 — Card stack (data card + story card)
+              Mobile (<md): data card at top below navbar, story card at bottom of the viewport
+                            (map breathes in the middle).
+              Tablet (md to lg-1): both cards hug the bottom in a 50/50 row — story left,
+                                    data right — with 20px side margins and a 20px gap
+                                    (so the right-side stack doesn't cover the ARENBERG label).
+              Mid-desktop (lg to 1349px): same bottom row as tablet, but centered with a max
+                                          width so the cards don't span the whole screen.
+              Wide desktop (≥1350px): both cards stacked on the right side with a 20px gap. */}
+          <div className="pointer-events-none absolute inset-x-0 top-24 bottom-6 z-[10] flex flex-col justify-between px-4 md:inset-x-5 md:top-auto md:bottom-5 md:grid md:grid-cols-2 md:items-stretch md:gap-5 md:px-0 lg:max-xl:inset-x-0 lg:max-xl:mx-auto lg:max-xl:max-w-[44rem] xl:inset-x-auto! xl:left-auto! xl:top-32! xl:right-8! xl:bottom-auto! xl:flex! xl:flex-col! xl:w-[17rem] xl:items-stretch xl:justify-start xl:gap-5 xl:px-0">
             <RideWeatherData
               progress={progress}
               reducedMotion={shouldReduceMotion}
-              anchorPosition={projectedWaypoints?.find(w => w.label === "ARENBERG")}
             />
-          </div>
-
-          {/* LAYER 4 — Cards */}
-          <div className="pointer-events-none relative z-[10] flex h-full w-full flex-col justify-end">
-            {/* Text card — bottom-left */}
-            <div className="mx-auto w-full max-w-[1200px] px-4 pb-5 md:px-5 md:pb-16">
-              <div
-                ref={textRef}
-                className="pointer-events-auto w-full rounded-xl border border-white/10 bg-surface-card/80 p-4 shadow-lg backdrop-blur-sm md:max-w-sm md:rounded-2xl md:p-6"
-              >
-                <motion.div
-                  {...anim(0)}
-                  className="mb-0.5 font-mono text-[9px] font-medium tracking-wider text-vv-blue md:mb-1 md:text-[11px]"
-                >
-                  {RIDE_FEATURE.time}
-                </motion.div>
-                <motion.h3
-                  {...anim(0.1)}
-                  className="mb-1 font-mono text-lg font-medium leading-tight text-white md:mb-2 md:text-3xl"
-                >
-                  {RIDE_FEATURE.title}
-                </motion.h3>
-                <motion.p
-                  {...anim(0.2)}
-                  className="font-mono text-[10px] font-light leading-relaxed text-n-400 md:text-xs"
-                >
-                  {RIDE_FEATURE.description}
-                </motion.p>
-              </div>
-            </div>
+            <DynamicTextCard progress={progress} />
           </div>
 
         </div>

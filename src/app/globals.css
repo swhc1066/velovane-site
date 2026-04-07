@@ -2,6 +2,10 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* Breakpoints — override default `xl` from 1280px to 1350px so we can branch
+     the RideMapPanel layout (cards on bottom below 1350, right-side stack at xl+) */
+  --breakpoint-xl: 1350px;
+
   /* VeloVane Brand Colors */
   --color-vv-blue: #5BA4D4;
   --color-vv-blue-light: #E8F2FA;

@@ -3,6 +3,8 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ProblemSection } from "@/components/sections/ProblemSection";
+import { RideMapPanel } from "@/components/sections/RideMapPanel";
+import { VeloVaneRevealSection } from "@/components/sections/VeloVaneRevealSection";
 import { FeaturesSection } from "@/components/sections/FeaturesSection";
 import { PlatformSection } from "@/components/sections/PlatformSection";
 import { FaqSection } from "@/components/sections/FaqSection";
@@ -16,6 +18,8 @@ export default function Home() {
       <main>
         <HeroSection />
         <ProblemSection />
+        <RideMapPanel />
+        <VeloVaneRevealSection />
         <FeaturesSection />
         <PlatformSection />
         <FaqSection />

@@ -18,13 +18,15 @@ export function MapboxBackground({ onMapReady }: MapboxBackgroundProps) {
 
     mapboxgl.accessToken = token;
 
-    // Zoom out on mobile so the full route fits the narrow portrait viewport
+    // Zoom out on mobile so the full route fits the narrow portrait viewport.
+    // On desktop, zoom in 25% (~+0.32 on the logarithmic zoom scale) since the
+    // cards now sit to the right side and the map has more room to breathe.
     const isMobile = containerRef.current.offsetWidth < 768;
     const map = new mapboxgl.Map({
       container: containerRef.current,
       style: "mapbox://styles/mapbox/dark-v11",
       center: isMobile ? [MAP_CENTER[0] - 0.005, MAP_CENTER[1]] as [number, number] : MAP_CENTER,
-      zoom: isMobile ? MAP_ZOOM - 0.8 : MAP_ZOOM,
+      zoom: isMobile ? MAP_ZOOM - 0.8 : MAP_ZOOM + 0.32,
       interactive: false,
       attributionControl: false,
       fadeDuration: 0,

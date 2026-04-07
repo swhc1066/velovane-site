@@ -34,11 +34,77 @@ export const FEATURES = [
       "Civil twilight started at 6:12. The dawn overlay confirms daylight for your ride window. Seasonal shifts accounted for automatically. Time to ride.",
     mockup: "/mockups/notification.webp",
   },
+];
+
+/* ------------------------------------------------------------------ */
+/*  "Without VeloVane" narrative for the ride map panel                */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Text card content at each scroll phase.
+ *
+ * Unified timeline: rider starts at 10:00 AM (progress 0.30), ends at 12:00 PM
+ * (progress 0.70). Wind holds WSW through 10:30 AM (progress 0.40), fully
+ * shifted to ENE by 11:30 AM (progress 0.60). Times match the data card clock.
+ */
+export const RIDE_NARRATIVE = [
   {
-    time: "7:00 AM",
-    title: "You ride.",
+    phase: 1,
+    progressRange: [0.30, 0.40] as [number, number],
+    time: "10:00 AM",
+    title: "You head out.",
     description:
-      "The wind is exactly where VeloVane said it would be. Headwind out, tailwind back. 52\u00B0 at departure, warming to 58\u00B0 by the time you roll home. Every number checks out.",
+      "Headwind from the southwest. Not ideal, but you expect the payoff — tailwind on the way back.",
+  },
+  {
+    phase: 2,
+    progressRange: [0.40, 0.52] as [number, number],
+    time: "10:30 AM",
+    title: "The wind is shifting.",
+    description:
+      "Conditions are changing. The tailwind you were counting on may not be there for the return.",
+  },
+  {
+    phase: 3,
+    progressRange: [0.52, 0.65] as [number, number],
+    time: "11:10 AM",
+    title: "Headwind. Again.",
+    description:
+      "Wind shifted while you were out. The return you planned as easy just became a grind.",
+  },
+  {
+    phase: 4,
+    progressRange: [0.65, 0.82] as [number, number],
+    time: "11:45 AM",
+    title: "Grinding home.",
+    description:
+      "Power fading, speed dropping. Headwind going out. Headwind coming back.",
+  },
+  {
+    phase: 5,
+    progressRange: [0.82, 1.0] as [number, number],
+    time: "12:00 PM",
+    title: "Without VeloVane.",
+    description: "",
+  },
+];
+
+/** Narrator callouts — floating overlays at specific scroll points */
+export const NARRATOR_CALLOUTS = [
+  {
+    progress: 0.42, // ~10:36 AM — wind just started shifting
+    text: "Wind shifting\u2026",
+    color: "yellow" as const,
+  },
+  {
+    progress: 0.55, // ~11:15 AM — headwind kicks in on return
+    text: "Wind shifted. Headwind on the way back.",
+    color: "red" as const,
+  },
+  {
+    progress: 0.67, // ~11:51 AM — grinding home
+    text: "Headwind going out. Headwind coming back.",
+    color: "red" as const,
   },
 ];
 

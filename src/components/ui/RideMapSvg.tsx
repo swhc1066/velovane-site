@@ -86,11 +86,13 @@ export function RideMapSvg({
   const markerRingRef = useRef<SVGCircleElement>(null);
   const [totalLength, setTotalLength] = useState(0);
 
-  // Wind direction (kept for RideWeatherData consistency)
+  // Wind direction: WSW (240°) → S (180°) → ENE (60°)
+  // Unified timeline: wind holds through 10:30 AM (progress 0.40),
+  // fully shifted to ENE by 11:30 AM (progress 0.60)
   const windFromDeg = useTransform(
     progress,
-    [0.30, 0.45, 0.50, 0.55, 0.70],
-    [270, 270, 180, 90, 90],
+    [0.30, 0.40, 0.50, 0.60, 0.70],
+    [240, 240, 180, 60, 60],
   );
 
   // Compute path length after mount and when projected path changes
