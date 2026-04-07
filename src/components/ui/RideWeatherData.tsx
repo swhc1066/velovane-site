@@ -174,17 +174,21 @@ export function RideWeatherData({
     if (p < 0.62) return "Hard";      // 11:00-11:36, headwind return
     return "Maxed";                    // 11:36-12:00, grinding home
   });
+  const effortDisplay = useTransform(effortStr, (v) => String(v));
   const effortColor = useTransform(progress, (p) => {
     if (p < 0.40) return GREEN;
     if (p < 0.50) return YELLOW;
     if (p < 0.62) return ORANGE;
     return RED;
   });
+  const effortColorDisplay = useTransform(effortColor, (v) => String(v));
 
   // ── NEW: Headwind/Tailwind/Crosswind label ──
   const windRelStr = useTransform(
-    [progress, windDirDeg] as [MotionValue<number>, MotionValue<number>],
-    ([p, windDeg]) => {
+    [progress, windDirDeg],
+    (values: number[]) => {
+      const p = values[0] ?? 0;
+      const windDeg = values[1] ?? 0;
       // Map scroll progress to path percentage (0.30→0.70 maps to 0→1)
       const pathPct = Math.max(0, Math.min(1, (p - 0.3) / 0.4));
       const riderBearing = bearingAtPct(ROUTE_BEARINGS, pathPct);
@@ -196,6 +200,7 @@ export function RideWeatherData({
     if (rel === "Crosswind") return YELLOW;
     return RED;
   });
+  const windRelDisplay = useTransform(windRelStr, (rel) => String(rel));
 
   // ── Accent color for card border ──
   // Blue (steady, 0.30-0.40) → Yellow (shifting, 0.40-0.50) → Red (headwind return, 0.50+)
@@ -253,12 +258,12 @@ export function RideWeatherData({
               className="text-[9px] font-semibold tabular-nums tracking-wider md:text-[11px]"
               style={{ color: windRelColor }}
             >
-              {windRelStr}
+              {windRelDisplay}
             </motion.span>
           </div>
           <DatumRow label="Speed" value={speedStr} valueColor={speedColor} />
           <DatumRow label="Power" value={powerStr} valueColor={powerColor} />
-          <DatumRow label="Effort" value={effortStr} valueColor={effortColor} />
+          <DatumRow label="Effort" value={effortDisplay} valueColor={effortColorDisplay} />
         </div>
       </div>
 
@@ -284,12 +289,12 @@ export function RideWeatherData({
               className="text-[14px] font-semibold tabular-nums tracking-wider"
               style={{ color: windRelColor }}
             >
-              {windRelStr}
+              {windRelDisplay}
             </motion.span>
           </div>
           <DatumRow label="Speed" value={speedStr} valueColor={speedColor} />
           <DatumRow label="Power" value={powerStr} valueColor={powerColor} />
-          <DatumRow label="Effort" value={effortStr} valueColor={effortColor} />
+          <DatumRow label="Effort" value={effortDisplay} valueColor={effortColorDisplay} />
         </div>
 
         {/* Divider */}
