@@ -42,6 +42,16 @@
 
   /* Font */
   --font-mono: "Geist Mono", "SF Mono", "Fira Code", "Cascadia Code", monospace;
+
+  --color-vv-blue: #5BA4D4;
+  --color-vv-blue-light: #E8F2FA;
+  --color-vv-blue-dark: #3A7BAD;
+  --color-vv-blue-darker: #265A82;
+  --color-go-light: #E8F5E9;
+  --color-go-mid: #4CAF50;
+  --color-go-dark: #2E7D32;
+  /* ...etc from the mockup's :root block */
+
 }
 
 :root {
