@@ -113,7 +113,7 @@ export function RideMapPanel() {
       {/* Scroll container */}
       <div ref={scrollRef} className="relative" style={{ minHeight: "250vh" }}>
         {/* Sticky viewport */}
-        <div className="sticky top-0 relative h-dvh overflow-hidden">
+        <div className="sticky top-0 relative h-dvh overflow-hidden bg-surface-dark">
 
           {/* LAYER 0 — Mapbox dark map background */}
           <div className="pointer-events-none absolute inset-0 z-[0] opacity-60">

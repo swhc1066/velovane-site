@@ -1,41 +1,43 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { LogoNav } from "../ui/Logo";
+import Link from "next/link";
+import { LogoMark } from "@/components/ui/Logo";
 
 export function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 100);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
     <nav
-      className="fixed top-0 right-0 left-0 z-40 transition-all duration-500"
-      style={{
-        background: scrolled ? "rgba(12,12,14,0.85)" : "transparent",
-        backdropFilter: scrolled ? "blur(20px)" : "none",
-        WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-        borderBottom: scrolled
-          ? "1px solid rgba(255,255,255,0.06)"
-          : "1px solid transparent",
-        opacity: scrolled ? 1 : 0,
-        pointerEvents: scrolled ? "auto" : "none",
-      }}
+      className="fixed top-0 right-0 left-0 z-50 border-b border-black/[0.04] bg-white"
+      aria-label="Primary"
     >
-      <div className="mx-auto flex max-w-[1200px] items-center justify-between px-5 py-3">
-        <LogoNav />
-        <a
-          href="#download"
-          className="rounded-lg bg-white px-4 py-2 font-mono text-xs font-medium tracking-wide text-surface-dark transition-colors hover:bg-n-200"
+      <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-8 px-6 py-5 md:px-8">
+        <Link
+          href="/"
+          className="flex items-center shrink-0 transition-opacity hover:opacity-80"
+          aria-label="VeloVane home"
         >
-          DOWNLOAD
-        </a>
+          <LogoMark size={24} />
+        </Link>
+
+        <div className="flex items-center gap-6 md:gap-8">
+          <a
+            href="#features"
+            className="font-mono text-[11px] font-normal uppercase tracking-[0.14em] text-text-secondary transition-colors hover:text-text-primary"
+          >
+            How it works
+          </a>
+          <a
+            href="#faq"
+            className="font-mono text-[11px] font-normal uppercase tracking-[0.14em] text-text-secondary transition-colors hover:text-text-primary"
+          >
+            FAQ
+          </a>
+          <a
+            href="#notify"
+            className="bg-text-primary px-[18px] py-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-white transition-colors hover:bg-vv-blue-darker"
+          >
+            Get notified
+          </a>
+        </div>
       </div>
     </nav>
   );

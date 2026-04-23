@@ -34,24 +34,22 @@
   /* Semantic */
   --color-go: #4CAF50;
   --color-go-light: #E8F5E9;
+  --color-go-mid: #4CAF50;
   --color-go-dark: #2E7D32;
   --color-caution: #F9A825;
   --color-caution-light: #FFF8E1;
   --color-skip: #EF5350;
   --color-skip-light: #FFEBEE;
 
+  /* On-light typography (mockup-aligned) */
+  --color-text-primary: #000000;
+  --color-text-secondary: #5c5f66;
+  --color-text-tertiary: #b2b2b2;
+  --color-text-wordmark: #4a4a4a;
+  --color-surface-white: #ffffff;
+
   /* Font */
   --font-mono: "Geist Mono", "SF Mono", "Fira Code", "Cascadia Code", monospace;
-
-  --color-vv-blue: #5BA4D4;
-  --color-vv-blue-light: #E8F2FA;
-  --color-vv-blue-dark: #3A7BAD;
-  --color-vv-blue-darker: #265A82;
-  --color-go-light: #E8F5E9;
-  --color-go-mid: #4CAF50;
-  --color-go-dark: #2E7D32;
-  /* ...etc from the mockup's :root block */
-
 }
 
 :root {
@@ -65,12 +63,13 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
 }
 
 body {
   font-family: var(--font-mono);
-  background: var(--color-surface-dark);
-  color: #ffffff;
+  background: var(--color-surface-white);
+  color: var(--color-text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 14px;
@@ -186,4 +185,26 @@ body {
   border-bottom: 1px solid rgba(91, 164, 212, 0.25);
   border-right: 1px solid rgba(91, 164, 212, 0.25);
   border-bottom-right-radius: 3px;
+}
+
+/* Hero reco card — verdict pill live dot */
+@keyframes vv-hero-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.88);
+  }
+}
+
+.hero-verdict-pulse {
+  animation: vv-hero-pulse 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-verdict-pulse {
+    animation: none;
+  }
 }

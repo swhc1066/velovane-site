@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 // import { GridOverlay } from "@/components/layout/GridOverlay";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
+import { AtmosphericsStrip } from "@/components/sections/atmospherics-strip";
 import { ProblemSection } from "@/components/sections/ProblemSection";
 import { RideMapPanel } from "@/components/sections/RideMapPanel";
 import { VeloVaneRevealSection } from "@/components/sections/VeloVaneRevealSection";
@@ -17,6 +18,7 @@ export default function Home() {
       <Navbar />
       <main>
         <HeroSection />
+        <AtmosphericsStrip />
         <ProblemSection />
         <RideMapPanel />
         <VeloVaneRevealSection />
