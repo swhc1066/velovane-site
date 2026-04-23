@@ -32,7 +32,8 @@ export function VeloVaneRevealSection() {
   return (
     <section
       ref={ref}
-      className="relative overflow-hidden bg-[#0a0a0c] py-24 md:py-40"
+      data-nav-tone="dark"
+      className="relative overflow-hidden bg-map-depth py-24 md:py-40"
     >
       {/* Architectural grid backdrop */}
       <svg

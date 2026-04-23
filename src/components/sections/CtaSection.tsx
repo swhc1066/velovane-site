@@ -4,6 +4,7 @@ import { LogoLockup } from "../ui/Logo";
 export function CtaSection() {
   return (
     <section
+      data-nav-tone="dark"
       className="section-rounded-t relative overflow-hidden bg-surface-dark"
       id="download"
     >

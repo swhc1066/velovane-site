@@ -25,6 +25,7 @@ export function HeroSection() {
   return (
     <section
       ref={sectionRef}
+      data-nav-tone="light"
       className="section-rounded-b relative isolate min-h-dvh overflow-hidden bg-transparent text-text-primary"
     >
       {/* Full-viewport-width sky (breaks out of any inner max-width) + full section height */}
@@ -122,7 +123,7 @@ export function HeroSection() {
           >
             Launching iOS 2026. &nbsp;·&nbsp;{" "}
             <a
-              href="#features"
+              href="#how"
               className="text-text-secondary underline decoration-1 underline-offset-[3px] transition-colors hover:text-text-primary"
             >
               See how it works →

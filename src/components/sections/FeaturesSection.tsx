@@ -442,7 +442,11 @@ function TimelinePanel() {
 /* ─── Main Section ─── */
 export function FeaturesSection() {
   return (
-    <section className="section-rounded-t section-rounded-b relative bg-surface-dark" id="features">
+    <section
+      data-nav-tone="dark"
+      className="section-rounded-t section-rounded-b relative bg-surface-dark"
+      id="features"
+    >
       <div className="pointer-events-none absolute inset-0 hidden opacity-10 md:block"
         style={{
           backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px)",

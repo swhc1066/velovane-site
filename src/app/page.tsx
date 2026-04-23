@@ -3,8 +3,9 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { AtmosphericsStrip } from "@/components/sections/atmospherics-strip";
-import { ProblemSection } from "@/components/sections/ProblemSection";
+import { RideSceneChapterIntro } from "@/components/sections/ride-scene-chapter-intro";
 import { RideMapPanel } from "@/components/sections/RideMapPanel";
+import { SceneARevealSection } from "@/components/sections/scene-a-reveal-section";
 import { VeloVaneRevealSection } from "@/components/sections/VeloVaneRevealSection";
 import { FeaturesSection } from "@/components/sections/FeaturesSection";
 import { PlatformSection } from "@/components/sections/PlatformSection";
@@ -19,8 +20,9 @@ export default function Home() {
       <main>
         <HeroSection />
         <AtmosphericsStrip />
-        <ProblemSection />
+        <RideSceneChapterIntro />
         <RideMapPanel />
+        <SceneARevealSection />
         <VeloVaneRevealSection />
         <FeaturesSection />
         <PlatformSection />

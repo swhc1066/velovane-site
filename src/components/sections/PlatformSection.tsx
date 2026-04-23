@@ -4,7 +4,7 @@ import { PLATFORM_CARDS } from "@/lib/constants";
 
 export function PlatformSection() {
   return (
-    <section className="relative bg-surface-light" id="platform">
+    <section data-nav-tone="light" className="relative bg-surface-light" id="platform">
       <div className="mx-auto max-w-[1200px] px-5 py-20 md:py-32">
         {/* Header */}
         <div className="mb-16 grid grid-cols-1 gap-6 md:grid-cols-12">

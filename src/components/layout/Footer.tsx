@@ -2,7 +2,7 @@ import { LogoMark } from "../ui/Logo";
 
 export function Footer() {
   return (
-    <footer className="relative bg-surface-dark">
+    <footer data-nav-tone="dark" className="relative bg-surface-dark">
       <div className="mx-auto max-w-[1200px] px-5 pt-16 pb-8">
         {/* Top border */}
         <div className="mb-12 h-px w-full bg-white/6" />

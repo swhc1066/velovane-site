@@ -15,6 +15,10 @@
 
   /* Surfaces */
   --color-surface-dark: #0C0C0E;
+  /* Map-adjacent: deep blue-grey aligned with Mapbox dark water / basemap */
+  --color-map-depth: #0e1624;
+  --color-map-depth-elev: #121f2e;
+  --color-map-depth-line: #1c2d40;
   --color-surface-card: #151518;
   --color-surface-card-hover: #1A1A1E;
   --color-surface-light: #F8F9FA;

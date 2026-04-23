@@ -107,13 +107,15 @@ export function RideMapPanel() {
 
   return (
     <>
-      {/* Divider */}
-      <div className="h-px bg-white/6" />
-
       {/* Scroll container */}
-      <div ref={scrollRef} className="relative" style={{ minHeight: "250vh" }}>
+      <div
+        ref={scrollRef}
+        data-nav-tone="dark"
+        className="relative"
+        style={{ minHeight: "250vh" }}
+      >
         {/* Sticky viewport */}
-        <div className="sticky top-0 relative h-dvh overflow-hidden bg-surface-dark">
+        <div className="sticky top-0 relative h-dvh overflow-hidden bg-map-depth">
 
           {/* LAYER 0 — Mapbox dark map background */}
           <div className="pointer-events-none absolute inset-0 z-[0] opacity-60">
@@ -123,7 +125,10 @@ export function RideMapPanel() {
           {/* Vignette overlay — darkens edges to focus on route */}
           <div
             className="pointer-events-none absolute inset-0 z-[0]"
-            style={{ background: "radial-gradient(ellipse 70% 60% at 50% 45%, transparent 0%, rgba(12,12,14,0.5) 100%)" }}
+            style={{
+              background:
+                "radial-gradient(ellipse 70% 60% at 50% 45%, transparent 0%, rgba(14, 22, 36, 0.52) 100%)",
+            }}
           />
 
           {/* LAYER 1 — Full-bleed route SVG */}
