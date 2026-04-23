@@ -6,8 +6,7 @@ import { AtmosphericsStrip } from "@/components/sections/atmospherics-strip";
 import { RideSceneChapterIntro } from "@/components/sections/ride-scene-chapter-intro";
 import { RideMapPanel } from "@/components/sections/RideMapPanel";
 import { SceneARevealSection } from "@/components/sections/scene-a-reveal-section";
-import { VeloVaneRevealSection } from "@/components/sections/VeloVaneRevealSection";
-import { FeaturesSection } from "@/components/sections/FeaturesSection";
+import { SceneBWalkthroughSection } from "@/components/sections/scene-b-walkthrough-section";
 import { PlatformSection } from "@/components/sections/PlatformSection";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { CtaSection } from "@/components/sections/CtaSection";
@@ -23,8 +22,7 @@ export default function Home() {
         <RideSceneChapterIntro />
         <RideMapPanel />
         <SceneARevealSection />
-        <VeloVaneRevealSection />
-        <FeaturesSection />
+        <SceneBWalkthroughSection />
         <PlatformSection />
         <FaqSection />
         <CtaSection />
