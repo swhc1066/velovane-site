@@ -1,8 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { LogoMark } from "../ui/Logo";
+import heroBackground from "../../../hero-images/polina-kuzovkova-8ndjGq5tO1A-unsplash.jpg";
 
 export function HeroSection() {
   const shouldReduceMotion = useReducedMotion();
@@ -28,7 +30,7 @@ export function HeroSection() {
       data-nav-tone="light"
       className="section-rounded-b relative isolate min-h-dvh overflow-hidden bg-transparent text-text-primary"
     >
-      {/* Full-viewport-width sky (breaks out of any inner max-width) + full section height */}
+      {/* Same stack as cloud video: cool wash + low-opacity media (multiply) + white ramp */}
       <div
         className="pointer-events-none absolute top-0 bottom-0 left-1/2 z-0 min-h-dvh w-screen max-w-[100dvw] -translate-x-1/2 overflow-hidden"
         style={{
@@ -36,17 +38,15 @@ export function HeroSection() {
             "linear-gradient(180deg, rgba(232, 242, 250, 0.6) 0%, rgba(232, 242, 250, 0.15) 40%, rgba(255, 255, 255, 1) 85%)",
         }}
       >
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
+        <Image
+          src={heroBackground}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
           className="absolute inset-0 size-full object-cover object-top opacity-[0.32] mix-blend-multiply"
-          poster="/hero-clouds.png"
           aria-hidden
-        >
-          <source src="/hero-clouds.mp4" type="video/mp4" />
-        </video>
+        />
         <div
           className="absolute inset-0 size-full"
           style={{
@@ -83,9 +83,9 @@ export function HeroSection() {
             className="mb-12 max-w-[520px] text-lg font-normal leading-[1.55] text-text-secondary"
           >
             One answer in five seconds:{" "}
-            <strong className="font-medium text-text-primary">go, wait, or skip</strong>, with
-            your best ride window and why. The cycling weather app that replaces the three
-            you&apos;re using now.
+            <strong className="font-medium text-text-primary">go, wait, or skip</strong>, with your
+            best ride window and why. The cycling weather app that replaces the three you&apos;re
+            using now.
           </motion.p>
 
           <motion.form
