@@ -128,6 +128,56 @@
     height: auto;
     border: 1px solid var(--n200);
   }
+  .map-panel-placeholder {
+    border: 1px solid var(--n200);
+    background: linear-gradient(180deg, rgba(19, 24, 32, 0.92) 0%, rgba(10, 14, 19, 1) 100%);
+    min-height: 520px;
+    position: relative;
+    overflow: hidden;
+  }
+  .map-panel-placeholder::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(600px 340px at 25% 30%, rgba(91, 164, 212, 0.18), transparent 60%),
+      radial-gradient(540px 320px at 80% 65%, rgba(249, 168, 37, 0.12), transparent 65%),
+      linear-gradient(180deg, rgba(91, 164, 212, 0.06) 0%, rgba(0, 0, 0, 0) 40%);
+    pointer-events: none;
+  }
+  .map-panel-placeholder-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: 0.25;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+  .map-panel-placeholder-content {
+    position: relative;
+    padding: 28px 28px 24px;
+    max-width: 760px;
+  }
+  .map-panel-placeholder-title {
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+  .map-panel-placeholder-body {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    line-height: 1.55;
+    max-width: 560px;
+  }
+  .map-panel-placeholder-body strong {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
   .map-placeholder-note {
     position: absolute;
     top: 16px;
@@ -442,7 +492,16 @@
     <div class="map-placeholder-note">
       Existing &lt;RideMapPanel /&gt; — scrolls in production
     </div>
-    <img src="scene-a-map.png" alt="Existing scrolling map panel" class="map-screenshot">
+    <div class="map-panel-placeholder" role="img" aria-label="Placeholder for the existing scrolling map panel">
+      <div class="map-panel-placeholder-grid" aria-hidden="true"></div>
+      <div class="map-panel-placeholder-content">
+        <div class="map-panel-placeholder-title">Map panel placeholder</div>
+        <div class="map-panel-placeholder-body">
+          This mockup used to reference <strong>scene-a-map.png</strong>, but that file is not in the repo.
+          Replace this block with a real screenshot export if you want a pixel-perfect stand-in.
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════ -->

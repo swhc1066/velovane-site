@@ -107,13 +107,7 @@ export function SceneARevealSection() {
         </div>
 
         <div className="mx-auto mt-16 max-w-[1200px] md:mt-20">
-          <div className="flex items-center gap-5">
-            <div className="h-px flex-1 bg-map-depth-line" aria-hidden />
-            <span className="whitespace-nowrap font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-vv-blue">
-              Scene B · With VeloVane · DWG VV-001 REV D
-            </span>
-            <div className="h-px flex-1 bg-map-depth-line" aria-hidden />
-          </div>
+          <div className="h-px w-full bg-map-depth-line" aria-hidden />
         </div>
       </div>
     </section>
