@@ -4,7 +4,8 @@ import { LogoLockup } from "../ui/Logo";
 export function CtaSection() {
   return (
     <section
-      className="section-rounded-t relative overflow-hidden bg-surface-dark"
+      data-nav-tone="dark"
+      className="relative overflow-hidden bg-surface-dark"
       id="download"
     >
       {/* Sunshine road background — the narrative payoff */}

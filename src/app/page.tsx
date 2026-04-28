@@ -2,11 +2,12 @@ import { Navbar } from "@/components/layout/Navbar";
 // import { GridOverlay } from "@/components/layout/GridOverlay";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
-import { ProblemSection } from "@/components/sections/ProblemSection";
+import { AtmosphericsStrip } from "@/components/sections/atmospherics-strip";
+import { RideSceneChapterIntro } from "@/components/sections/ride-scene-chapter-intro";
 import { RideMapPanel } from "@/components/sections/RideMapPanel";
-import { VeloVaneRevealSection } from "@/components/sections/VeloVaneRevealSection";
-import { FeaturesSection } from "@/components/sections/FeaturesSection";
-import { PlatformSection } from "@/components/sections/PlatformSection";
+import { SceneARevealSection } from "@/components/sections/scene-a-reveal-section";
+import { SceneBWalkthroughSection } from "@/components/sections/scene-b-walkthrough-section";
+import { AppGallerySection } from "@/components/sections/app-gallery-section";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { CtaSection } from "@/components/sections/CtaSection";
 
@@ -17,11 +18,12 @@ export default function Home() {
       <Navbar />
       <main>
         <HeroSection />
-        <ProblemSection />
+        <AtmosphericsStrip />
+        <RideSceneChapterIntro />
         <RideMapPanel />
-        <VeloVaneRevealSection />
-        <FeaturesSection />
-        <PlatformSection />
+        <SceneARevealSection />
+        <SceneBWalkthroughSection />
+        <AppGallerySection />
         <FaqSection />
         <CtaSection />
       </main>

@@ -4,7 +4,7 @@ import { FAQ_ITEMS } from "@/lib/constants";
 
 export function FaqSection() {
   return (
-    <section className="section-rounded-b relative bg-white" id="faq">
+    <section data-nav-tone="light" className="section-rounded-b relative bg-white" id="faq">
       <div className="mx-auto max-w-[1200px] px-5 py-20 md:py-32">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-0">
           {/* Left heading */}
