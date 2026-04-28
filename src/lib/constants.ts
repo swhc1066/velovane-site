@@ -108,32 +108,37 @@ export const NARRATOR_CALLOUTS = [
   },
 ];
 
-export const PLATFORM_CARDS = [
+/** App gallery (after Scene B) — image paths under `public/mockups/`. */
+export const APP_GALLERY_ITEMS = [
   {
-    number: "01",
-    title: "Intelligence under the hood.",
-    description:
-      "VeloVane analyzes your preferences against live forecast data to surface the best ride window automatically. No manual interpretation — the recommendation appears the moment you open the app.",
+    stamp: "01 · DASHBOARD",
+    label: "Today's call",
+    text: "One glance. Ride or don't.",
+    image: "/mockups/dashboard.jpg",
+    alt: "VeloVane dashboard showing today's ride recommendation",
   },
   {
-    number: "02",
-    title: "Morning intelligence, delivered.",
-    description:
-      "A daily push notification at the time you choose. One sentence: today's AI recommendation and your best ride window. Tap to open the full dashboard. Suppress on rest days.",
+    stamp: "02 · WEEK DETAIL",
+    label: "Plan the week",
+    text: "Your best windows, seven days out.",
+    image: "/mockups/week-detail.jpg",
+    alt: "VeloVane week view with best ride windows",
   },
   {
-    number: "03",
-    title: "It learns how you ride.",
-    description:
-      "VeloVane passively detects when you ride via GPS patterns and refines its understanding of your preferences over time. No manual logging. The recommendations get sharper the more you use it.",
+    stamp: "03 · HOUR DETAIL",
+    label: "Zoom in",
+    text: "Every hour. Every detail.",
+    image: "/mockups/hourly-forecast.jpg",
+    alt: "VeloVane hourly forecast detail",
   },
   {
-    number: "04",
-    title: "Your best windows, highlighted.",
-    description:
-      "The hourly forecast highlights time blocks that match your preferences — wind threshold, temperature range, preferred duration, and daylight. Scroll the timeline and see exactly when conditions align.",
+    stamp: "04 · CALIBRATION",
+    label: "Tuned to you",
+    text: "Your thresholds. We learn the rest.",
+    image: "/mockups/calibration.png",
+    alt: "VeloVane calibration and preferences",
   },
-];
+] as const;
 
 export const FAQ_ITEMS = [
   {

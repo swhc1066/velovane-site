@@ -7,7 +7,7 @@ import { RideSceneChapterIntro } from "@/components/sections/ride-scene-chapter-
 import { RideMapPanel } from "@/components/sections/RideMapPanel";
 import { SceneARevealSection } from "@/components/sections/scene-a-reveal-section";
 import { SceneBWalkthroughSection } from "@/components/sections/scene-b-walkthrough-section";
-import { PlatformSection } from "@/components/sections/PlatformSection";
+import { AppGallerySection } from "@/components/sections/app-gallery-section";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { CtaSection } from "@/components/sections/CtaSection";
 
@@ -23,7 +23,7 @@ export default function Home() {
         <RideMapPanel />
         <SceneARevealSection />
         <SceneBWalkthroughSection />
-        <PlatformSection />
+        <AppGallerySection />
         <FaqSection />
         <CtaSection />
       </main>
