@@ -49,7 +49,7 @@ export function CtaSection() {
 
             <div className="flex flex-col items-center gap-4 sm:flex-row">
               <a
-                href="#"
+                href="#notify"
                 className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-mono text-sm font-medium text-surface-dark transition-colors hover:bg-n-200"
               >
                 <svg

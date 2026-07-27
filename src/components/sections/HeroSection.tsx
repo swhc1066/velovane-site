@@ -9,7 +9,44 @@ import heroBackground from "../../../hero-images/polina-kuzovkova-8ndjGq5tO1A-un
 export function HeroSection() {
   const shouldReduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
-  const [submitLabel, setSubmitLabel] = useState("Notify me");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  const submitLabel =
+    status === "submitting"
+      ? "Sending…"
+      : status === "success"
+        ? "✓ On the list"
+        : status === "error"
+          ? "Try again"
+          : "Notify me";
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (status === "submitting" || status === "success") return;
+
+    const form = e.currentTarget;
+    const email = (
+      form.elements.namedItem("email") as HTMLInputElement | null
+    )?.value.trim();
+    if (!email) return;
+
+    setStatus("submitting");
+    try {
+      const res = await fetch("https://formspree.io/f/xbdzveyr", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: new FormData(form),
+      });
+      if (res.ok) {
+        setStatus("success");
+        form.reset();
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  };
 
   const anim = (delay: number) =>
     shouldReduceMotion
@@ -92,11 +129,14 @@ export function HeroSection() {
             {...anim(0.24)}
             id="notify"
             className="mb-5 flex max-w-[480px] flex-col border border-n-300 bg-white transition-[border-color] duration-200 focus-within:border-text-primary sm:flex-row sm:items-stretch"
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSubmitLabel("✓ On the list");
-            }}
+            onSubmit={handleSubmit}
           >
+            <input type="hidden" name="source" value="homepage" />
+            <input
+              type="hidden"
+              name="_subject"
+              value="New VeloVane launch-list signup (homepage)"
+            />
             <label htmlFor="hero-email" className="sr-only">
               Email for launch notification
             </label>
@@ -106,16 +146,34 @@ export function HeroSection() {
               type="email"
               autoComplete="email"
               required
+              disabled={status === "success"}
               placeholder="you@email.com"
-              className="min-w-0 flex-1 border-0 bg-transparent px-[18px] py-4 font-mono text-sm text-text-primary outline-none placeholder:text-n-400"
+              className="min-w-0 flex-1 border-0 bg-transparent px-[18px] py-4 font-mono text-sm text-text-primary outline-none placeholder:text-n-400 disabled:opacity-60"
             />
             <button
               type="submit"
-              className="shrink-0 border-0 bg-text-primary px-6 py-4 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-white transition-colors duration-200 hover:bg-vv-blue-darker sm:py-0"
+              disabled={status === "submitting" || status === "success"}
+              className="shrink-0 border-0 bg-text-primary px-6 py-4 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-white transition-colors duration-200 hover:bg-vv-blue-darker disabled:cursor-default sm:py-0"
             >
               {submitLabel}
             </button>
           </motion.form>
+
+          {(status === "success" || status === "error") && (
+            <motion.p
+              initial={shouldReduceMotion ? undefined : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              role="status"
+              aria-live="polite"
+              className={`mb-5 -mt-2 text-xs tracking-[0.02em] ${
+                status === "success" ? "text-go-dark" : "text-red-600"
+              }`}
+            >
+              {status === "success"
+                ? "You're on the list — we'll email your TestFlight invite."
+                : "Something went wrong. Please try again."}
+            </motion.p>
+          )}
 
           <motion.p
             {...anim(0.28)}
