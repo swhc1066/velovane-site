@@ -134,7 +134,7 @@ export function Navbar() {
             isDark ? "text-white/70" : "text-text-secondary"
           }`}>
             <span>Today ·</span>
-            <span className="font-medium text-[#4CAF50]">
+            <span className="font-medium text-[#35C46A]">
               GO
             </span>
             <span>10:30 AM</span>
