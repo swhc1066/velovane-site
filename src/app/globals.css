@@ -212,3 +212,9 @@ body {
     animation: none;
   }
 }
+
+/* Hero dawn intro — scroll lock while cold-open plays */
+body.hero-dawn-lock {
+  overflow: hidden;
+  height: 100vh;
+}
