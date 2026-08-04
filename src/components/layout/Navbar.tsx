@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSyncExternalStore, useEffect, useState } from "react";
 import { LogoMark } from "@/components/ui/Logo";
+import { HERO_INTRO_DONE_EVENT, HERO_INTRO_SEEN_KEY } from "@/lib/hero-intro";
 
 function readNavIsDark(): boolean {
   if (typeof document === "undefined") return false;
@@ -58,22 +59,20 @@ export function Navbar() {
   const [introReady, setIntroReady] = useState(false);
 
   useEffect(() => {
-    // Check localStorage on mount
     if (typeof window !== "undefined") {
-      if (localStorage.getItem("velovane-hero-intro-seen") === "1") {
+      if (localStorage.getItem(HERO_INTRO_SEEN_KEY) === "1") {
         setIntroReady(true);
       }
     }
 
-    // Listen for intro completion event
     const handleIntroComplete = () => {
       setIntroReady(true);
     };
 
-    window.addEventListener("velovane:hero-intro-done", handleIntroComplete);
-    
+    window.addEventListener(HERO_INTRO_DONE_EVENT, handleIntroComplete);
+
     return () => {
-      window.removeEventListener("velovane:hero-intro-done", handleIntroComplete);
+      window.removeEventListener(HERO_INTRO_DONE_EVENT, handleIntroComplete);
     };
   }, []);
 

@@ -2,9 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { LogoMark } from "@/components/ui/Logo";
+import { HERO_INTRO_DONE_EVENT, HERO_INTRO_SEEN_KEY } from "@/lib/hero-intro";
 import styles from "./hero-dawn-section.module.css";
-
-const INTRO_SEEN_KEY = "velovane-hero-intro-seen";
 
 export function HeroDawnSection() {
   const introRef = useRef<HTMLDivElement>(null);
@@ -27,21 +26,22 @@ export function HeroDawnSection() {
   const skipBtnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    let timers: NodeJS.Timeout[] = [];
+    let timers: ReturnType<typeof setTimeout>[] = [];
     let raf: number | null = null;
     let done = false;
+    let touchStartY: number | null = null;
 
     function unlock() {
       document.body.classList.remove("hero-dawn-lock");
     }
 
     function notifyIntroDone() {
-      window.dispatchEvent(new Event("velovane:hero-intro-done"));
+      window.dispatchEvent(new Event(HERO_INTRO_DONE_EVENT));
     }
 
     function markSeen() {
       try {
-        localStorage.setItem(INTRO_SEEN_KEY, "1");
+        localStorage.setItem(HERO_INTRO_SEEN_KEY, "1");
       } catch {
         /* ignore quota / private mode */
       }
@@ -49,7 +49,7 @@ export function HeroDawnSection() {
 
     const alreadySeen = (() => {
       try {
-        return localStorage.getItem(INTRO_SEEN_KEY) === "1";
+        return localStorage.getItem(HERO_INTRO_SEEN_KEY) === "1";
       } catch {
         return false;
       }
@@ -136,6 +136,7 @@ export function HeroDawnSection() {
       const timer5 = setTimeout(() => {
         if (!done) {
           done = true;
+          detachSkipListeners();
           endIntro();
         }
       }, 8800);
@@ -143,18 +144,48 @@ export function HeroDawnSection() {
       timers.push(timer1, timer2, timer3, timer4, timer5);
     }
 
-    // Skip button handler
-    function onSkip() {
-      finish();
+    function detachSkipListeners() {
+      window.removeEventListener("wheel", onWheelSkip);
+      window.removeEventListener("keydown", onKeySkip);
+      window.removeEventListener("touchstart", onTouchStart, true);
+      window.removeEventListener("touchmove", onTouchMoveSkip);
     }
 
-    // Once event handlers for user interaction
-    function onceFinish() {
+    function onSkip() {
       finish();
-      // Remove listeners
-      window.removeEventListener("wheel", onceFinish);
-      window.removeEventListener("keydown", onceFinish);
-      window.removeEventListener("touchmove", onceFinish);
+      detachSkipListeners();
+    }
+
+    // Intentional skip only — ignore trackpad noise / tiny touch jitters.
+    // Armed after the push lands so the clock beat can play out.
+    function onWheelSkip(e: WheelEvent) {
+      if (Math.abs(e.deltaY) < 40 && Math.abs(e.deltaX) < 40) return;
+      onSkip();
+    }
+
+    function onKeySkip(e: KeyboardEvent) {
+      const key = e.key;
+      if (
+        key !== "Escape" &&
+        key !== " " &&
+        key !== "Enter" &&
+        key !== "ArrowDown" &&
+        key !== "PageDown"
+      ) {
+        return;
+      }
+      onSkip();
+    }
+
+    function onTouchStart(e: TouchEvent) {
+      touchStartY = e.touches[0]?.clientY ?? null;
+    }
+
+    function onTouchMoveSkip(e: TouchEvent) {
+      if (touchStartY == null) return;
+      const y = e.touches[0]?.clientY;
+      if (y == null || Math.abs(y - touchStartY) < 36) return;
+      onSkip();
     }
 
     // Scrub tick function - exact reference implementation
@@ -277,11 +308,14 @@ export function HeroDawnSection() {
         skipBtnRef.current.addEventListener("click", onSkip);
       }
 
+      // Don't arm scroll/key skip until the push notification appears (~4.2s).
+      // Earlier arming let trackpad noise kill the clock beat immediately.
       const delayedListenerTimer = setTimeout(() => {
-        window.addEventListener("wheel", onceFinish, { passive: true, once: true });
-        window.addEventListener("keydown", onceFinish, { once: true });
-        window.addEventListener("touchmove", onceFinish, { passive: true, once: true });
-      }, 900);
+        window.addEventListener("wheel", onWheelSkip, { passive: true });
+        window.addEventListener("keydown", onKeySkip);
+        window.addEventListener("touchstart", onTouchStart, { passive: true, capture: true });
+        window.addEventListener("touchmove", onTouchMoveSkip, { passive: true });
+      }, 4200);
       timers.push(delayedListenerTimer);
     }
 
@@ -295,9 +329,7 @@ export function HeroDawnSection() {
       if (raf !== null) cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", tick);
-      window.removeEventListener("wheel", onceFinish);
-      window.removeEventListener("keydown", onceFinish);
-      window.removeEventListener("touchmove", onceFinish);
+      detachSkipListeners();
       if (skipBtnRef.current) {
         skipBtnRef.current.removeEventListener("click", onSkip);
       }
