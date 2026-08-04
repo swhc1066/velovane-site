@@ -1,6 +1,6 @@
 export function RideSceneChapterIntro() {
   return (
-    <section id="how" data-nav-tone="dark" className="bg-map-depth text-white">
+    <section data-nav-tone="dark" className="bg-map-depth text-white">
       <div className="mx-auto max-w-[1200px] px-6 pb-12 pt-16 md:px-8 md:pb-[60px] md:pt-[100px]">
         <header className="mb-10 flex flex-col gap-2 border-b border-map-depth-line pb-8 md:mb-12 md:flex-row md:items-baseline md:gap-7">
           <span className="shrink-0 font-mono text-[clamp(40px,8vw,56px)] font-light leading-none tracking-[-0.03em] text-vv-blue md:text-[56px]">

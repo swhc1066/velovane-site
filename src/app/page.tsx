@@ -1,8 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
-// import { GridOverlay } from "@/components/layout/GridOverlay";
 import { Footer } from "@/components/layout/Footer";
-import { HeroSection } from "@/components/sections/HeroSection";
-import { AtmosphericsStrip } from "@/components/sections/atmospherics-strip";
+import { HeroDawnSection } from "@/components/sections/hero-dawn-section";
 import { RideSceneChapterIntro } from "@/components/sections/ride-scene-chapter-intro";
 import { RideMapPanel } from "@/components/sections/RideMapPanel";
 import { SceneARevealSection } from "@/components/sections/scene-a-reveal-section";
@@ -14,11 +12,9 @@ import { CtaSection } from "@/components/sections/CtaSection";
 export default function Home() {
   return (
     <>
-      {/* <GridOverlay /> */}
       <Navbar />
       <main>
-        <HeroSection />
-        <AtmosphericsStrip />
+        <HeroDawnSection />
         <RideSceneChapterIntro />
         <RideMapPanel />
         <SceneARevealSection />
