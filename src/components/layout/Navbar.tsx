@@ -28,10 +28,13 @@ function readLightSurfaceProgress(): number {
   return t * t * (3 - 2 * t);
 }
 
-/** Snapshot for useSyncExternalStore: `1` = dark bar, `0` + blend = light bar with white fade. */
+/** Snapshot for useSyncExternalStore: `dark:0|1` = dark bar (scrolled bit), `light:*` = light bar with white fade. */
 function getNavSnapshot(): string {
-  if (typeof document === "undefined") return "0:0.000";
-  if (readNavIsDark()) return "dark";
+  if (typeof document === "undefined") return "light:0.000";
+  if (readNavIsDark()) {
+    const scrolled = typeof window !== "undefined" && window.scrollY > 60 ? 1 : 0;
+    return `dark:${scrolled}`;
+  }
   return `light:${readLightSurfaceProgress().toFixed(3)}`;
 }
 
@@ -46,7 +49,8 @@ function subscribe(onChange: () => void) {
 
 export function Navbar() {
   const snap = useSyncExternalStore(subscribe, getNavSnapshot, () => "light:0.000");
-  const isDark = snap === "dark";
+  const isDark = snap.startsWith("dark:");
+  const darkScrolled = snap === "dark:1";
   const lightSurface =
     snap.startsWith("light:") ? Number.parseFloat(snap.slice(6)) || 0 : 0;
 
@@ -85,8 +89,7 @@ export function Navbar() {
         }
       : undefined;
 
-  // Enhanced dark backdrop when scrolled
-  const darkNavStyle = isDark && typeof window !== "undefined" && window.scrollY > 60
+  const darkNavStyle = isDark && darkScrolled
     ? {
         backgroundColor: "rgba(6, 9, 13, 0.72)",
         backdropFilter: "blur(20px)",
@@ -97,7 +100,7 @@ export function Navbar() {
   return (
     <nav
       id="site-nav"
-      className={`fixed top-0 right-0 left-0 z-50 border-b border-solid transition-[background-color,border-color,backdrop-filter,opacity] duration-600 ease-out ${
+      className={`fixed top-0 right-0 left-0 z-50 border-b border-solid transition-[background-color,border-color,backdrop-filter,opacity] duration-[600ms] ease-out ${
         isDark
           ? "border-white/10 bg-map-depth/90 text-white backdrop-blur-md supports-[backdrop-filter]:bg-map-depth/80"
           : ""
@@ -131,7 +134,7 @@ export function Navbar() {
             isDark ? "text-white/70" : "text-text-secondary"
           }`}>
             <span>Today ·</span>
-            <span style={{ color: isDark ? "#4CAF50" : "#4CAF50" }} className="font-medium">
+            <span className="font-medium text-[#4CAF50]">
               GO
             </span>
             <span>10:30 AM</span>
