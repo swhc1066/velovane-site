@@ -270,13 +270,13 @@ export function HeroDawnSection() {
     } else {
       // Normal intro
       play();
-      
-      // Setup skip button
+    }
+
+    if (!alreadySeen) {
       if (skipBtnRef.current) {
         skipBtnRef.current.addEventListener("click", onSkip);
       }
-      
-      // Setup once finish listeners (delayed) - matches reference timing
+
       const delayedListenerTimer = setTimeout(() => {
         window.addEventListener("wheel", onceFinish, { passive: true, once: true });
         window.addEventListener("keydown", onceFinish, { once: true });
