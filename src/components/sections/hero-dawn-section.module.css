@@ -55,6 +55,7 @@
   line-height: 1;
   display: inline-flex;
   align-items: flex-start;
+  color: #fff;
 }
 
 .ioClock .d {
