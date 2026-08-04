@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore, useEffect, useState } from "react";
 import { LogoMark } from "@/components/ui/Logo";
 
 function readNavIsDark(): boolean {
@@ -50,6 +50,29 @@ export function Navbar() {
   const lightSurface =
     snap.startsWith("light:") ? Number.parseFloat(snap.slice(6)) || 0 : 0;
 
+  // Intro visibility state
+  const [introReady, setIntroReady] = useState(false);
+
+  useEffect(() => {
+    // Check localStorage on mount
+    if (typeof window !== "undefined") {
+      if (localStorage.getItem("velovane-hero-intro-seen") === "1") {
+        setIntroReady(true);
+      }
+    }
+
+    // Listen for intro completion event
+    const handleIntroComplete = () => {
+      setIntroReady(true);
+    };
+
+    window.addEventListener("velovane:hero-intro-done", handleIntroComplete);
+    
+    return () => {
+      window.removeEventListener("velovane:hero-intro-done", handleIntroComplete);
+    };
+  }, []);
+
   const lightNavStyle =
     !isDark
       ? {
@@ -62,27 +85,58 @@ export function Navbar() {
         }
       : undefined;
 
+  // Enhanced dark backdrop when scrolled
+  const darkNavStyle = isDark && typeof window !== "undefined" && window.scrollY > 60
+    ? {
+        backgroundColor: "rgba(6, 9, 13, 0.72)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+      }
+    : undefined;
+
   return (
     <nav
       id="site-nav"
-      className={`fixed top-0 right-0 left-0 z-50 border-b border-solid transition-[background-color,border-color,backdrop-filter] duration-200 ease-out ${
+      className={`fixed top-0 right-0 left-0 z-50 border-b border-solid transition-[background-color,border-color,backdrop-filter,opacity] duration-600 ease-out ${
         isDark
           ? "border-white/10 bg-map-depth/90 text-white backdrop-blur-md supports-[backdrop-filter]:bg-map-depth/80"
           : ""
+      } ${
+        introReady ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
-      style={isDark ? undefined : lightNavStyle}
+      style={isDark ? darkNavStyle : lightNavStyle}
       aria-label="Primary"
     >
       <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-8 px-6 py-5 md:px-8">
-        <Link
-          href="/"
-          className={`flex shrink-0 items-center transition-opacity hover:opacity-80 ${
-            isDark ? "opacity-95 hover:opacity-100" : ""
-          }`}
-          aria-label="VeloVane home"
-        >
-          <LogoMark size={24} />
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/"
+            className={`flex shrink-0 items-center transition-opacity hover:opacity-80 ${
+              isDark ? "opacity-95 hover:opacity-100" : ""
+            }`}
+            aria-label="VeloVane home"
+          >
+            <LogoMark size={24} />
+          </Link>
+          
+          {/* Optional wordmark */}
+          <span className={`font-mono text-sm font-normal ${
+            isDark ? "text-white" : "text-text-wordmark"
+          }`}>
+            velovane
+          </span>
+          
+          {/* Today chip - hidden below ~700px */}
+          <div className={`hidden min-[701px]:flex items-center gap-1 text-xs font-mono ${
+            isDark ? "text-white/70" : "text-text-secondary"
+          }`}>
+            <span>Today ·</span>
+            <span style={{ color: isDark ? "#4CAF50" : "#4CAF50" }} className="font-medium">
+              GO
+            </span>
+            <span>10:30 AM</span>
+          </div>
+        </div>
 
         <div className="flex items-center gap-6 md:gap-8">
           <a
@@ -93,20 +147,20 @@ export function Navbar() {
                 : "text-text-secondary hover:text-text-primary"
             }`}
           >
-            How it works
+            How it reads
           </a>
           <a
-            href="#faq"
+            href="#download"
             className={`font-mono text-[11px] font-normal uppercase tracking-[0.14em] transition-colors ${
               isDark
                 ? "text-white/70 hover:text-white"
                 : "text-text-secondary hover:text-text-primary"
             }`}
           >
-            FAQ
+            Pricing
           </a>
           <a
-            href="#notify"
+            href="#download"
             className={`px-[18px] py-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] transition-colors ${
               isDark
                 ? "bg-white text-map-depth hover:bg-n-200"
