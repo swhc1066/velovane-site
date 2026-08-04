@@ -55,19 +55,23 @@ export function HeroDawnSection() {
       }
     })();
 
-    function rollTo6() {
-      if (rHRef.current) {
-        const col = rHRef.current.querySelector(`.${styles.col}`);
-        col?.classList.add(styles.roll || "roll");
-      }
-      if (rMTRef.current) {
-        const col = rMTRef.current.querySelector(`.${styles.col}`);
-        col?.classList.add(styles.roll || "roll");
-      }
-      if (rMURef.current) {
-        const col = rMURef.current.querySelector(`.${styles.col}`);
-        col?.classList.add(styles.roll || "roll");
-      }
+    function rollTo6(snap: boolean = false) {
+      [rHRef, rMTRef, rMURef].forEach((ref, i) => {
+        if (ref.current) {
+          const col = ref.current.querySelector(`.${styles.col}`) as HTMLElement;
+          if (col) {
+            if (snap) {
+              col.style.transition = 'none';
+              col.classList.add(styles.roll || "roll");
+            } else {
+              const timer = setTimeout(() => {
+                col.classList.add(styles.roll || "roll");
+              }, i * 250);
+              timers.push(timer);
+            }
+          }
+        }
+      });
     }
 
     function fadeClock() {
@@ -79,17 +83,18 @@ export function HeroDawnSection() {
     function fadeStorm() {
       if (introRef.current) {
         introRef.current.classList.add(styles.dawn || "dawn");
+        introRef.current.style.pointerEvents = 'none';
       }
       unlock();
     }
 
     function reveal() {
-      if (pushRef.current) {
-        pushRef.current.classList.add(styles.in || "in");
-      }
+      fadeClock();
+      fadeStorm();
     }
 
     function endIntro() {
+      unlock(); // For safety - ensure unlock if reveal() hasn't run yet
       if (pushRef.current) {
         pushRef.current.classList.remove(styles.in || "in");
         pushRef.current.classList.add(styles.out || "out");
@@ -97,9 +102,12 @@ export function HeroDawnSection() {
       if (hintRef.current) {
         hintRef.current.classList.add(styles.show || "show");
       }
-      if (introRef.current) {
-        introRef.current.classList.add(styles.gone || "gone");
-      }
+      const timer = setTimeout(() => {
+        if (introRef.current) {
+          introRef.current.classList.add(styles.gone || "gone");
+        }
+      }, 1100);
+      timers.push(timer);
       notifyIntroDone();
       markSeen();
     }
@@ -109,24 +117,28 @@ export function HeroDawnSection() {
       done = true;
       timers.forEach(clearTimeout);
       timers = [];
-      
-      // Snap roll
-      rollTo6();
-      
-      // Reveal and end
-      reveal();
-      const endTimer = setTimeout(endIntro, 1600);
-      timers.push(endTimer);
+      rollTo6(true); // Snap roll
+      reveal(); // This calls fadeClock() + fadeStorm() which unlocks
+      endIntro(); // Immediate, not delayed
     }
 
     function play() {
       document.body.classList.add("hero-dawn-lock");
       
-      const timer1 = setTimeout(rollTo6, 3000);
-      const timer2 = setTimeout(fadeClock, 4200);
-      const timer3 = setTimeout(fadeStorm, 5200);
-      const timer4 = setTimeout(reveal, 5900);
-      const timer5 = setTimeout(endIntro, 8800);
+      const timer1 = setTimeout(() => rollTo6(false), 3000);
+      const timer2 = setTimeout(() => {
+        if (pushRef.current) {
+          pushRef.current.classList.add(styles.in || "in");
+        }
+      }, 4200);
+      const timer3 = setTimeout(fadeClock, 5200);
+      const timer4 = setTimeout(fadeStorm, 5900);
+      const timer5 = setTimeout(() => {
+        if (!done) {
+          done = true;
+          endIntro();
+        }
+      }, 8800);
       
       timers.push(timer1, timer2, timer3, timer4, timer5);
     }
@@ -145,75 +157,92 @@ export function HeroDawnSection() {
       window.removeEventListener("touchmove", onceFinish);
     }
 
-    // Scrub tick function
+    // Scrub tick function - exact reference implementation
     function tick() {
       if (!scrubRef.current) return;
       
       const rect = scrubRef.current.getBoundingClientRect();
-      const viewHeight = window.innerHeight;
-      const progress = Math.max(0, Math.min(1, -rect.top / (rect.height - viewHeight)));
-      const ramp = Math.pow(progress, 0.8);
+      const total = scrubRef.current.offsetHeight - window.innerHeight;
+      const p = cl(-rect.top / total);
       
-      // Layer transitions
-      if (L0Ref.current && L1Ref.current && L2Ref.current) {
-        if (ramp < 0.33) {
-          L0Ref.current.style.opacity = "1";
-          L1Ref.current.style.opacity = "0";
-          L2Ref.current.style.opacity = "0";
-        } else if (ramp < 0.66) {
-          const fade = (ramp - 0.33) / 0.33;
-          L0Ref.current.style.opacity = String(1 - fade);
-          L1Ref.current.style.opacity = String(fade);
-          L2Ref.current.style.opacity = "0";
-        } else {
-          const fade = (ramp - 0.66) / 0.34;
-          L0Ref.current.style.opacity = "0";
-          L1Ref.current.style.opacity = String(1 - fade);
-          L2Ref.current.style.opacity = String(fade);
-        }
+      // Hide hint when scrollY > 40
+      if (window.scrollY > 40 && hintRef.current) {
+        hintRef.current.classList.add(styles.hide || "hide");
       }
-
-      // Verdict transitions
-      [V0Ref, V1Ref, V2Ref].forEach((ref, i) => {
-        if (!ref.current) return;
-        const start = i * 0.33;
-        const end = start + 0.33;
-        
-        if (ramp >= start && ramp <= end) {
-          const localProgress = (ramp - start) / 0.33;
-          ref.current.style.opacity = String(Math.min(1, localProgress * 2));
-          ref.current.style.transform = `translateY(${20 * (1 - localProgress)}px)`;
-        } else {
-          ref.current.style.opacity = "0";
-          ref.current.style.transform = "translateY(20px)";
-        }
-      });
-
+      
+      // Layer opacities (exact reference math)
+      if (L1Ref.current) {
+        L1Ref.current.style.opacity = String(ramp(0.26, 0.46, p));
+      }
+      const l2 = ramp(0.58, 0.80, p);
+      if (L2Ref.current) {
+        L2Ref.current.style.opacity = String(l2);
+      }
+      
+      // Layer transforms
+      if (L0Ref.current) {
+        L0Ref.current.style.transform = `scale(1.08) translateY(${p * -2.4}%)`;
+      }
+      if (L1Ref.current) {
+        L1Ref.current.style.transform = `scale(1.08) translateY(${p * -3.6}%)`;
+      }
+      if (L2Ref.current) {
+        L2Ref.current.style.transform = `scale(${1.09 - 0.03 * l2}) translateY(${(p - 0.5) * -3.4}%)`;
+      }
+      
+      // Verdict opacities and transforms
+      const o0 = 1 - ramp(0.20, 0.30, p);
+      const o1 = cl(Math.min(ramp(0.34, 0.44, p), 1 - ramp(0.56, 0.64, p)));
+      const o2 = ramp(0.70, 0.82, p);
+      
+      if (V0Ref.current) {
+        V0Ref.current.style.opacity = String(o0);
+        V0Ref.current.style.transform = `translateY(${(1 - o0) * 16}px)`;
+      }
+      if (V1Ref.current) {
+        V1Ref.current.style.opacity = String(o1);
+        V1Ref.current.style.transform = `translateY(${(1 - o1) * 16}px)`;
+      }
+      if (V2Ref.current) {
+        V2Ref.current.style.opacity = String(o2);
+        V2Ref.current.style.transform = `translateY(${(1 - o2) * 16}px)`;
+      }
+      
       // Progress indicators
-      [P0Ref, P1Ref, P2Ref].forEach((ref, i) => {
-        if (!ref.current) return;
-        const start = i * 0.33;
-        const isActive = ramp >= start;
-        
-        if (isActive) {
-          ref.current.classList.add(styles.on || "on");
-        } else {
-          ref.current.classList.remove(styles.on || "on");
-        }
-      });
+      if (P0Ref.current) {
+        P0Ref.current.classList.toggle(styles.on || "on", p < 0.30);
+      }
+      if (P1Ref.current) {
+        P1Ref.current.classList.toggle(styles.on || "on", p >= 0.30 && p < 0.67);
+      }
+      if (P2Ref.current) {
+        P2Ref.current.classList.toggle(styles.on || "on", p >= 0.67);
+      }
+    }
+    
+    // Helper functions for exact reference math
+    function cl(x: number): number {
+      return Math.max(0, Math.min(1, x));
+    }
+    
+    function ramp(a: number, b: number, x: number): number {
+      return cl((x - a) / (b - a));
     }
 
     function onScroll() {
-      if (raf) cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(tick);
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = null;
+        tick();
+      });
     }
 
     // Check for reduced motion
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (alreadySeen) {
-      // Returning visitor: skip intro but setup scrub
-      rollTo6();
+      // Returning visitor: no lock, snap clock, intro dawn+gone, skip push, show hint
+      rollTo6(true); // Snap
       if (introRef.current) {
         introRef.current.classList.add(styles.dawn || "dawn", styles.gone || "gone");
       }
@@ -221,16 +250,22 @@ export function HeroDawnSection() {
         hintRef.current.classList.add(styles.show || "show");
       }
       notifyIntroDone();
+      markSeen();
     } else if (prefersReducedMotion) {
-      // Reduced motion: quick sequence
+      // Reduced motion: lock; rollTo6(true); push.in; reveal @2000; at 3600 if !done { done=true; endIntro() }
       document.body.classList.add("hero-dawn-lock");
-      rollTo6();
+      rollTo6(true); // Snap roll
       if (pushRef.current) {
         pushRef.current.classList.add(styles.in || "in");
       }
       
       const revealTimer = setTimeout(reveal, 2000);
-      const endTimer = setTimeout(endIntro, 3600);
+      const endTimer = setTimeout(() => {
+        if (!done) {
+          done = true;
+          endIntro();
+        }
+      }, 3600);
       timers.push(revealTimer, endTimer);
     } else {
       // Normal intro
@@ -241,23 +276,23 @@ export function HeroDawnSection() {
         skipBtnRef.current.addEventListener("click", onSkip);
       }
       
-      // Setup once finish listeners (delayed)
+      // Setup once finish listeners (delayed) - matches reference timing
       const delayedListenerTimer = setTimeout(() => {
-        window.addEventListener("wheel", onceFinish, { once: true });
+        window.addEventListener("wheel", onceFinish, { passive: true, once: true });
         window.addEventListener("keydown", onceFinish, { once: true });
-        window.addEventListener("touchmove", onceFinish, { once: true });
-      }, 4000);
+        window.addEventListener("touchmove", onceFinish, { passive: true, once: true });
+      }, 900);
       timers.push(delayedListenerTimer);
     }
 
     // Always setup scrub listeners
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", tick);
     tick(); // Initial call
 
     return () => {
       timers.forEach(clearTimeout);
-      if (raf) cancelAnimationFrame(raf);
+      if (raf !== null) cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", tick);
       window.removeEventListener("wheel", onceFinish);
