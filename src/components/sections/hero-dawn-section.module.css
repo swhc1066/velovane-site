@@ -137,21 +137,12 @@
   border-color: rgba(255, 255, 255, 0.5);
 }
 
+/* Positioning + intro animation only — card chrome lives in PushNotification. */
 .push {
   position: fixed;
   top: 22px;
   left: 50%;
-  width: min(430px, 90vw);
   z-index: 101;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  background: rgba(24, 26, 30, 0.82);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
-  padding: 13px 15px;
   transform: translate(-50%, -180%);
   opacity: 0;
   transition:
@@ -167,35 +158,6 @@
 .push.out {
   transform: translate(-50%, -70%);
   opacity: 0;
-}
-
-.pic {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.ptxt .pa {
-  font-size: 9px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 3px;
-}
-
-.ptxt .pb {
-  font-size: 12.5px;
-  line-height: 1.42;
-  color: #fff;
-}
-
-.ptxt .pb b {
-  font-weight: 600;
 }
 
 .scrub {
@@ -470,18 +432,19 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 40px;
-  max-width: 920px;
+  width: 100%;
+  background: var(--color-stone, #fcf9f1);
+  color: var(--color-ink, #1a1814);
 }
 
 .band p {
   font-size: clamp(18px, 2.4vw, 26px);
-  color: #fff;
+  color: var(--color-ink, #1a1814);
   line-height: 1.4;
+  max-width: 920px;
 }
 
 @media (max-width: 700px) {
-  .band,
   .verd {
     padding-left: 22px;
     padding-right: 22px;

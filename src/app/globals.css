@@ -52,8 +52,18 @@
   --color-text-wordmark: #4a4a4a;
   --color-surface-white: #ffffff;
 
-  /* Font */
-  --font-mono: "Geist Mono", "SF Mono", "Fira Code", "Cascadia Code", monospace;
+  /* Warm brand pair (v2 cream system) */
+  --color-ink: #1a1814;
+  --color-stone: #fcf9f1;
+
+  /* Font — use next/font variable from layout.tsx (not the bare "Geist Mono"
+     family name, which never matches the injected face and falls back to
+     generic monospace). */
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Section vertical rhythm (equal top/bottom) */
+  --spacing-section-y: 4rem; /* 64px */
+  --spacing-section-y-md: 6rem; /* 96px */
 }
 
 :root {

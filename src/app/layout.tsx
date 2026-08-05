@@ -35,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistMono.variable} antialiased`}>
-      <body className="overflow-x-hidden font-mono">
+      <body className={`overflow-x-hidden font-mono ${geistMono.className}`}>
         {children}
         <Analytics />
       </body>

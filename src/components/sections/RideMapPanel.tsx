@@ -40,23 +40,46 @@ function DynamicTextCard({ progress }: { progress: MotionValue<number> }) {
   });
 
   // Single card body — parent controls positioning and width.
+  // On desktop, stack every narrative phase in one grid cell (invisible) so
+  // height stays locked to the tallest copy and the data card below doesn't jump.
   return (
     <motion.div
       className="w-full rounded-xl border border-white/10 bg-surface-card/80 p-4 shadow-lg backdrop-blur-sm md:order-1 md:h-full md:p-5 xl:h-auto xl:rounded-2xl xl:p-6 xl:order-none"
       style={{ borderTopColor: accentColor, borderTopWidth: "2px" }}
     >
-      <motion.div
-        className="mb-1 font-mono text-[10px] font-medium tracking-wider md:mb-1 md:text-[11px] xl:mb-1.5 xl:text-[13px]"
-        style={{ color: accentColor }}
-      >
-        {time}
-      </motion.div>
-      <motion.h3 className="mb-1.5 font-mono text-lg font-medium leading-tight text-white md:mb-2 md:text-xl xl:mb-3 xl:text-2xl">
-        {title}
-      </motion.h3>
-      <motion.p className="font-mono text-[10px] font-light leading-relaxed text-n-400 md:text-xs xl:text-sm">
-        {description}
-      </motion.p>
+      <div className="grid">
+        {RIDE_NARRATIVE.map((n) => (
+          <div
+            key={n.phase}
+            className="col-start-1 row-start-1 invisible hidden xl:block"
+            aria-hidden
+          >
+            <div className="mb-1.5 font-mono text-[13px] font-medium tracking-wider">
+              {n.time}
+            </div>
+            <h3 className="mb-3 font-mono text-2xl font-medium leading-tight">
+              {n.title}
+            </h3>
+            <p className="font-mono text-sm font-light leading-relaxed">
+              {n.description || "\u00A0"}
+            </p>
+          </div>
+        ))}
+        <div className="col-start-1 row-start-1">
+          <motion.div
+            className="mb-1 font-mono text-[10px] font-medium tracking-wider md:mb-1 md:text-[11px] xl:mb-1.5 xl:text-[13px]"
+            style={{ color: accentColor }}
+          >
+            {time}
+          </motion.div>
+          <motion.h3 className="mb-1.5 font-mono text-lg font-medium leading-tight text-white md:mb-2 md:text-xl xl:mb-3 xl:text-2xl">
+            {title}
+          </motion.h3>
+          <motion.p className="font-mono text-[10px] font-light leading-relaxed text-n-400 md:text-xs xl:text-sm">
+            {description}
+          </motion.p>
+        </div>
+      </div>
     </motion.div>
   );
 }

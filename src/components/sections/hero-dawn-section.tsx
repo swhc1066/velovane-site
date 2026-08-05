@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { LogoMark } from "@/components/ui/Logo";
+import { PushNotification } from "@/components/ui/push-notification";
 import { HERO_INTRO_DONE_EVENT, HERO_INTRO_SEEN_KEY } from "@/lib/hero-intro";
 import styles from "./hero-dawn-section.module.css";
 
@@ -381,17 +381,11 @@ export function HeroDawnSection() {
         </button>
       </div>
 
-      <div className={styles.push} id="hero-dawn-push" ref={pushRef}>
-        <div className={styles.pic} aria-hidden>
-          <LogoMark size={22} />
-        </div>
-        <div className={styles.ptxt}>
-          <div className={styles.pa}>VeloVane · now</div>
-          <div className={styles.pb}>
-            <b>Your window today — 10:30 AM.</b> Storms at dawn. Hold for it.
-          </div>
-        </div>
-      </div>
+      <PushNotification
+        id="hero-dawn-push"
+        ref={pushRef}
+        className={styles.push}
+      />
 
       <section
         className={styles.scrub}
@@ -470,8 +464,16 @@ export function HeroDawnSection() {
         <div className={styles.arw} />
       </div>
 
-      <div className={styles.band} data-nav-tone="dark">
-        <p>That&apos;s the morning VeloVane hands you. Now — the one it saves you from.</p>
+      <div
+        className={`${styles.band} px-6 md:px-8`}
+        data-nav-tone="light"
+      >
+        <div className="mx-auto w-full max-w-[1200px]">
+          <p>
+            That&apos;s the morning VeloVane hands you. Now — the one it saves
+            you from.
+          </p>
+        </div>
       </div>
     </>
   );

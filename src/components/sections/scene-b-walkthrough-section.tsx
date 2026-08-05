@@ -1,6 +1,10 @@
 import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
-import { LogoMark } from "@/components/ui/Logo";
+import { GoRecCard } from "@/components/ui/go-rec-card";
+import { HourlyGoStrip } from "@/components/ui/hourly-go-strip";
+import { PushNotification } from "@/components/ui/push-notification";
+import { TempPanel } from "@/components/ui/temp-panel";
+import { WindPanel } from "@/components/ui/wind-panel";
 
 const sceneBTokens: CSSProperties = {
   // Brand guide v2.0 (docs/velovane-brand-guide-v2.html)
@@ -41,179 +45,6 @@ function WalkthroughIntro() {
   );
 }
 
-function MiniNotif() {
-  return (
-    <div className="max-w-[380px] rounded-sm border-[0.5px] border-[color:var(--scene-b-border)] bg-[color:var(--scene-b-card)] px-[18px] py-3.5">
-      <div className="mb-2.5 flex items-center gap-2.5">
-        <span className="flex size-5 shrink-0 items-center justify-center bg-vv-blue">
-          <LogoMark size={14} />
-        </span>
-        <span className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[color:var(--scene-b-text-primary)]">
-          VeloVane
-        </span>
-        <span className="ml-auto font-mono text-[10px] tracking-[0.05em] text-[color:var(--scene-b-text-tertiary)]">
-          NOW
-        </span>
-      </div>
-      <p className="font-mono text-[13px] leading-normal text-[color:var(--scene-b-text-primary)]">
-        <strong className="font-semibold text-[color:var(--scene-b-status-go)]">GO</strong>: 7:00 -
-        9:30 AM. Steady 12 mph W, 52° on the bike. Tailwind home.
-      </p>
-    </div>
-  );
-}
-
-function BeatEmbedCard() {
-  return (
-    <div className="max-w-[340px] border-[0.5px] border-[#C4D6BB] bg-[#DCE8D5] px-[22px] py-5">
-      <div className="mb-3.5 flex items-center gap-2.5 border-b border-[#C4D6BB] pb-3">
-        <span className="inline-flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#5C8A52]">
-          <span className="size-1.5 rounded-full bg-[#5C8A52]" aria-hidden />
-          Go
-        </span>
-        <span className="font-mono text-[10px] tracking-[0.1em] text-[color:var(--scene-b-text-secondary)]">
-          TODAY
-        </span>
-      </div>
-      <div className="mb-1 font-mono text-2xl font-normal leading-tight tracking-[-0.01em] text-[color:var(--scene-b-text-primary)]">
-        7:00 - 9:30 AM
-      </div>
-      <p className="mb-3.5 font-mono text-[11px] text-[color:var(--scene-b-text-secondary)]">
-        2.5 hour window · tailwind home
-      </p>
-      <div className="grid grid-cols-3 gap-px bg-[#C4D6BB]">
-        {[
-          { label: "On bike", value: "52°F" },
-          { label: "Wind", value: "12 W" },
-          { label: "Precip", value: "4%" },
-        ].map((m) => (
-          <div key={m.label} className="bg-[#DCE8D5] p-2.5">
-            <div className="mb-0.5 font-mono text-[8px] uppercase tracking-[0.14em] text-[color:var(--scene-b-text-secondary)]">
-              {m.label}
-            </div>
-            <div className="font-mono text-sm font-medium text-[color:var(--scene-b-text-primary)]">
-              {m.value}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function WindViz() {
-  return (
-    <div className="flex max-w-[440px] flex-col gap-6 border-[0.5px] border-[color:var(--scene-b-border)] bg-[color:var(--scene-b-card)] p-6 max-[900px]:max-w-full md:flex-row md:items-center md:gap-7 md:p-7">
-      <div className="relative mx-auto size-24 shrink-0 rounded-full border border-[color:var(--scene-b-border)] md:mx-0">
-        {(["N", "E", "S", "W"] as const).map((d, i) => (
-          <span
-            key={d}
-            className={`absolute font-mono text-[9px] font-medium text-[color:var(--scene-b-border)] ${
-              d === "N"
-                ? "top-1 left-1/2 -translate-x-1/2"
-                : d === "E"
-                  ? "top-1/2 right-1 -translate-y-1/2"
-                  : d === "S"
-                    ? "bottom-1 left-1/2 -translate-x-1/2"
-                    : "top-1/2 left-1 -translate-y-1/2"
-            }`}
-          >
-            {d}
-          </span>
-        ))}
-        <div
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ transform: "rotate(240deg)" }}
-          aria-hidden
-        >
-          <svg className="size-[50px]" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M12 3 L12 19 M12 3 L7 9 M12 3 L17 9"
-              stroke="#5BA4D4"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
-      </div>
-      <div className="grid flex-1 gap-3 font-mono">
-        {[
-          { label: "Direction", value: "WSW 240°" },
-          { label: "Speed", value: "12 mph" },
-          { label: "Gusts", value: "18 mph" },
-          { label: "Crosswind", value: "Low" },
-        ].map((row) => (
-          <div key={row.label} className="flex items-baseline justify-between gap-3">
-            <span className="text-[9px] uppercase tracking-[0.1em] text-[color:var(--scene-b-text-secondary)]">
-              {row.label}
-            </span>
-            <span className="text-[13px] font-medium text-[color:var(--scene-b-text-primary)]">
-              {row.value}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function TempViz() {
-  return (
-    <div className="flex max-w-[420px] border-[0.5px] border-[color:var(--scene-b-border)] max-[900px]:max-w-full">
-      <div className="flex-1 bg-[color:var(--scene-b-card)] px-7 py-5">
-        <div className="mb-2.5 font-mono text-[9px] uppercase tracking-[0.14em] text-[color:var(--scene-b-text-secondary)]">
-          Standard
-        </div>
-        <div className="font-mono text-[40px] font-light leading-none tracking-[-0.025em] text-[color:var(--scene-b-text-primary)]">
-          54°
-        </div>
-        <div className="mt-2 font-mono text-[10px] tracking-[0.06em] text-[color:var(--scene-b-text-secondary)]">
-          AMBIENT
-        </div>
-      </div>
-      <div className="flex-1 bg-vv-blue-light px-7 py-5">
-        <div className="mb-2.5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-vv-blue-darker">
-          On the bike
-        </div>
-        <div className="font-mono text-[40px] font-medium leading-none tracking-[-0.025em] text-vv-blue-darker">
-          47°
-        </div>
-        <div className="mt-2 font-mono text-[10px] tracking-[0.06em] text-[color:var(--scene-b-text-secondary)]">
-          AT 17 MPH
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function DaylightViz() {
-  return (
-    <div className="max-w-[460px] max-[900px]:max-w-full">
-      <div
-        className="relative mt-6 mb-2.5 h-9 border border-[color:var(--scene-b-border)]"
-        style={{
-          background:
-            "linear-gradient(90deg, #1A2332 0%, #3A4A5C 8%, #8FC1E2 14%, #E8F2FA 22%, #FFF4D4 45%, #FFF4D4 60%, #E8F2FA 82%, #3A4A5C 94%, #1A2332 100%)",
-        }}
-      >
-        <div className="absolute -top-[5px] -bottom-[5px] left-[19%] w-[22%] border-2 border-vv-blue bg-vv-blue/10">
-          <span className="absolute -top-[22px] left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-vv-blue-darker">
-            RIDE WINDOW
-          </span>
-        </div>
-      </div>
-      <div className="flex justify-between px-0.5 font-mono text-[9px] tracking-[0.08em] text-[color:var(--scene-b-text-tertiary)]">
-        {["5 AM", "7 AM", "9 AM", "11 AM", "1 PM"].map((t) => (
-          <span key={t}>{t}</span>
-        ))}
-      </div>
-      <p className="mt-2.5 font-mono text-[11px] tracking-[0.02em] text-[color:var(--scene-b-text-secondary)]">
-        Dawn, ride window, midday shift arriving ~10:30
-      </p>
-    </div>
-  );
-}
 
 export function SceneBWalkthroughSection() {
   const beats: SceneBBeat[] = [
@@ -229,7 +60,7 @@ export function SceneBWalkthroughSection() {
           Everything you need to decide before you&apos;ve put your feet on the floor.
         </>
       ),
-      extra: <MiniNotif />,
+      extra: <PushNotification />,
     },
     {
       time: "6:01 AM",
@@ -244,7 +75,7 @@ export function SceneBWalkthroughSection() {
           Open the app, get the answer, close the app.
         </>
       ),
-      extra: <BeatEmbedCard />,
+      extra: <GoRecCard />,
     },
     {
       time: "6:02 AM",
@@ -252,13 +83,13 @@ export function SceneBWalkthroughSection() {
       body: (
         <>
           <strong className="font-medium text-[color:var(--scene-b-text-primary)]">
-            12 mph from the west, steady.
+            10 mph out of the N.
           </strong>{" "}
-          Gusts to 18, crosswind exposure low. VeloVane scores wind against your ride pattern, not
-          just raw speed, but how it&apos;ll feel on the bike you actually ride.
+          Gusts to 14. Shifting across the forecast — light enough that the out-and-back still
+          works. VeloVane scores wind against your ride pattern, not just raw speed.
         </>
       ),
-      extra: <WindViz />,
+      extra: <WindPanel />,
     },
     {
       time: "6:03 AM",
@@ -266,28 +97,28 @@ export function SceneBWalkthroughSection() {
       body: (
         <>
           <strong className="font-medium text-[color:var(--scene-b-text-primary)]">
-            54° outside. 47° on the bike.
+            74°F. Feels like 77°F.
           </strong>{" "}
-          VeloVane knows you&apos;ll be moving at 17 mph. Standard apps miss this by ten degrees on a
-          windy day, which is the difference between the right kit and a cold, miserable first hour.
+          High 77 / low 62 — ideal for the window. VeloVane reads the day against your thresholds,
+          not a generic comfort chart.
         </>
       ),
-      extra: <TempViz />,
+      extra: <TempPanel />,
     },
     {
       time: "6:04 AM",
       title: "You kit up.",
       body: (
         <>
-          Civil twilight at 6:12. The daylight bar confirms full light through the window. Seasonal
-          shifts accounted for automatically.{" "}
+          The hourly strip marks your window in green — 12pm to 2pm. Temp, wind, and rain risk
+          already scored.{" "}
           <strong className="font-medium text-[color:var(--scene-b-text-primary)]">
             You&apos;re dressed for the ride you&apos;re actually taking
           </strong>
           , and the door is already open.
         </>
       ),
-      extra: <DaylightViz />,
+      extra: <HourlyGoStrip />,
     },
   ];
 

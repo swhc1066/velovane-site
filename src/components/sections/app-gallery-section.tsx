@@ -53,7 +53,7 @@ export function AppGallerySection() {
                     alt={item.alt}
                     width={280}
                     height={560}
-                    className="h-auto w-full max-w-[280px] transition-[transform,filter] duration-[400ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] [filter:drop-shadow(0_2px_4px_rgba(26,24,20,0.04))_drop-shadow(0_12px_28px_rgba(26,24,20,0.08))_drop-shadow(0_24px_48px_rgba(26,24,20,0.06))] group-hover:-translate-y-1.5 group-hover:[filter:drop-shadow(0_2px_4px_rgba(26,24,20,0.04))_drop-shadow(0_18px_36px_rgba(26,24,20,0.12))_drop-shadow(0_32px_56px_rgba(26,24,20,0.08))] sm:max-w-[300px] lg:max-w-[280px]"
+                    className="h-auto w-full max-w-[280px] rounded-[40px] transition-[transform,filter] duration-[400ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] [filter:drop-shadow(0_2px_4px_rgba(26,24,20,0.04))_drop-shadow(0_12px_28px_rgba(26,24,20,0.08))_drop-shadow(0_24px_48px_rgba(26,24,20,0.06))] group-hover:-translate-y-1.5 group-hover:[filter:drop-shadow(0_2px_4px_rgba(26,24,20,0.04))_drop-shadow(0_18px_36px_rgba(26,24,20,0.12))_drop-shadow(0_32px_56px_rgba(26,24,20,0.08))] sm:max-w-[300px] sm:rounded-[44px] lg:max-w-[280px] lg:rounded-[40px]"
                   />
                 </div>
                 <figcaption className="px-1">
