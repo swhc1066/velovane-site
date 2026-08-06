@@ -14,9 +14,9 @@ export function HeroDawnSection() {
   const rHRef = useRef<HTMLSpanElement>(null);
   const rMTRef = useRef<HTMLSpanElement>(null);
   const rMURef = useRef<HTMLSpanElement>(null);
-  const L0Ref = useRef<HTMLDivElement>(null);
-  const L1Ref = useRef<HTMLDivElement>(null);
-  const L2Ref = useRef<HTMLDivElement>(null);
+  const L0Ref = useRef<HTMLImageElement>(null);
+  const L1Ref = useRef<HTMLImageElement>(null);
+  const L2Ref = useRef<HTMLImageElement>(null);
   const V0Ref = useRef<HTMLDivElement>(null);
   const V1Ref = useRef<HTMLDivElement>(null);
   const V2Ref = useRef<HTMLDivElement>(null);
@@ -30,6 +30,12 @@ export function HeroDawnSection() {
     let raf: number | null = null;
     let done = false;
     let touchStartY: number | null = null;
+
+    // Preload locked-ground weather frames (storm → clearing → sunny)
+    ["/weather/skip.jpg", "/weather/wait.jpg", "/weather/go.jpg"].forEach((src) => {
+      const im = new window.Image();
+      im.src = src;
+    });
 
     function unlock() {
       document.body.classList.remove("hero-dawn-lock");
@@ -188,44 +194,38 @@ export function HeroDawnSection() {
       onSkip();
     }
 
-    // Scrub tick function - exact reference implementation
+    // Scrub: WeatherScroll linear crossfade (storm → clearing → sunny), overlays keep their own ramps.
     function tick() {
       if (!scrubRef.current) return;
-      
+
       const rect = scrubRef.current.getBoundingClientRect();
       const total = scrubRef.current.offsetHeight - window.innerHeight;
       const p = cl(-rect.top / total);
-      
+
       // Hide hint when scrollY > 40
       if (window.scrollY > 40 && hintRef.current) {
         hintRef.current.classList.add(styles.hide || "hide");
       }
-      
-      // Layer opacities (exact reference math)
-      if (L1Ref.current) {
-        L1Ref.current.style.opacity = String(ramp(0.26, 0.46, p));
-      }
-      const l2 = ramp(0.58, 0.80, p);
-      if (L2Ref.current) {
-        L2Ref.current.style.opacity = String(l2);
-      }
-      
-      // Layer transforms
+
+      // Background layers: opacity only — no transforms (road stays pinned)
+      const t = p * 2;
       if (L0Ref.current) {
-        L0Ref.current.style.transform = `scale(1.08) translateY(${p * -2.4}%)`;
+        L0Ref.current.style.transform = "none";
       }
       if (L1Ref.current) {
-        L1Ref.current.style.transform = `scale(1.08) translateY(${p * -3.6}%)`;
+        L1Ref.current.style.opacity = String(cl(t));
+        L1Ref.current.style.transform = "none";
       }
       if (L2Ref.current) {
-        L2Ref.current.style.transform = `scale(${1.09 - 0.03 * l2}) translateY(${(p - 0.5) * -3.4}%)`;
+        L2Ref.current.style.opacity = String(cl(t - 1));
+        L2Ref.current.style.transform = "none";
       }
-      
+
       // Verdict opacities and transforms
       const o0 = 1 - ramp(0.20, 0.30, p);
       const o1 = cl(Math.min(ramp(0.34, 0.44, p), 1 - ramp(0.56, 0.64, p)));
       const o2 = ramp(0.70, 0.82, p);
-      
+
       if (V0Ref.current) {
         V0Ref.current.style.opacity = String(o0);
         V0Ref.current.style.transform = `translateY(${(1 - o0) * 16}px)`;
@@ -238,7 +238,7 @@ export function HeroDawnSection() {
         V2Ref.current.style.opacity = String(o2);
         V2Ref.current.style.transform = `translateY(${(1 - o2) * 16}px)`;
       }
-      
+
       // Progress indicators
       if (P0Ref.current) {
         P0Ref.current.classList.toggle(styles.on || "on", p < 0.30);
@@ -395,9 +395,30 @@ export function HeroDawnSection() {
         aria-label="One morning, resolving"
       >
         <div className={styles.sticky}>
-          <div className={`${styles.layer} ${styles.L0}`} id="hero-dawn-L0" ref={L0Ref} />
-          <div className={`${styles.layer} ${styles.L1}`} id="hero-dawn-L1" ref={L1Ref} />
-          <div className={`${styles.layer} ${styles.L2}`} id="hero-dawn-L2" ref={L2Ref} />
+          <img
+            className={`${styles.layer} ${styles.L0}`}
+            id="hero-dawn-L0"
+            ref={L0Ref}
+            src="/weather/skip.jpg"
+            alt=""
+            draggable={false}
+          />
+          <img
+            className={`${styles.layer} ${styles.L1}`}
+            id="hero-dawn-L1"
+            ref={L1Ref}
+            src="/weather/wait.jpg"
+            alt=""
+            draggable={false}
+          />
+          <img
+            className={`${styles.layer} ${styles.L2}`}
+            id="hero-dawn-L2"
+            ref={L2Ref}
+            src="/weather/go.jpg"
+            alt=""
+            draggable={false}
+          />
           <div className={styles.scrim} />
           <div className={styles.hd}>DWG VV-002 · One morning, resolving</div>
           <div className={styles.verd}>
