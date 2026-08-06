@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSyncExternalStore, useEffect, useState } from "react";
 import { LogoMark } from "@/components/ui/Logo";
-import { HERO_INTRO_DONE_EVENT, HERO_INTRO_SEEN_KEY } from "@/lib/hero-intro";
+import { HERO_INTRO_DONE_EVENT } from "@/lib/hero-intro";
 
 function readNavIsDark(): boolean {
   if (typeof document === "undefined") return false;
@@ -59,12 +59,6 @@ export function Navbar() {
   const [introReady, setIntroReady] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (localStorage.getItem(HERO_INTRO_SEEN_KEY) === "1") {
-        setIntroReady(true);
-      }
-    }
-
     const handleIntroComplete = () => {
       setIntroReady(true);
     };

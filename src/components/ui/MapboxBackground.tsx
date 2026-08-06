@@ -65,7 +65,9 @@ export function MapboxBackground({ onMapReady }: MapboxBackgroundProps) {
     <div
       ref={containerRef}
       aria-hidden="true"
-      className="absolute inset-0 h-full w-full [&_.mapboxgl-ctrl-bottom-left]:hidden [&_.mapboxgl-ctrl-bottom-right]:hidden"
+      // Inline position so Mapbox never sees a static container before Tailwind applies.
+      style={{ position: "absolute", inset: 0 }}
+      className="h-full w-full [&_.mapboxgl-ctrl-bottom-left]:hidden [&_.mapboxgl-ctrl-bottom-right]:hidden"
     />
   );
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { PushNotification } from "@/components/ui/push-notification";
-import { HERO_INTRO_DONE_EVENT, HERO_INTRO_SEEN_KEY } from "@/lib/hero-intro";
+import { HERO_INTRO_DONE_EVENT } from "@/lib/hero-intro";
 import styles from "./hero-dawn-section.module.css";
 
 export function HeroDawnSection() {
@@ -44,22 +44,6 @@ export function HeroDawnSection() {
     function notifyIntroDone() {
       window.dispatchEvent(new Event(HERO_INTRO_DONE_EVENT));
     }
-
-    function markSeen() {
-      try {
-        localStorage.setItem(HERO_INTRO_SEEN_KEY, "1");
-      } catch {
-        /* ignore quota / private mode */
-      }
-    }
-
-    const alreadySeen = (() => {
-      try {
-        return localStorage.getItem(HERO_INTRO_SEEN_KEY) === "1";
-      } catch {
-        return false;
-      }
-    })();
 
     function rollTo6(snap: boolean = false) {
       [rHRef, rMTRef, rMURef].forEach((ref, i) => {
@@ -115,7 +99,6 @@ export function HeroDawnSection() {
       }, 1100);
       timers.push(timer);
       notifyIntroDone();
-      markSeen();
     }
 
     function finish() {
@@ -271,25 +254,14 @@ export function HeroDawnSection() {
     // Check for reduced motion
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (alreadySeen) {
-      // Returning visitor: no lock, snap clock, intro dawn+gone, skip push, show hint
-      rollTo6(true); // Snap
-      if (introRef.current) {
-        introRef.current.classList.add(styles.dawn || "dawn", styles.gone || "gone");
-      }
-      if (hintRef.current) {
-        hintRef.current.classList.add(styles.show || "show");
-      }
-      notifyIntroDone();
-      markSeen();
-    } else if (prefersReducedMotion) {
-      // Reduced motion: lock; rollTo6(true); push.in; reveal @2000; at 3600 if !done { done=true; endIntro() }
+    // Always play the dawn intro on load/refresh so the clock beat is not skipped.
+    if (prefersReducedMotion) {
       document.body.classList.add("hero-dawn-lock");
-      rollTo6(true); // Snap roll
+      rollTo6(true);
       if (pushRef.current) {
         pushRef.current.classList.add(styles.in || "in");
       }
-      
+
       const revealTimer = setTimeout(reveal, 2000);
       const endTimer = setTimeout(() => {
         if (!done) {
@@ -299,25 +271,22 @@ export function HeroDawnSection() {
       }, 3600);
       timers.push(revealTimer, endTimer);
     } else {
-      // Normal intro
       play();
     }
 
-    if (!alreadySeen) {
-      if (skipBtnRef.current) {
-        skipBtnRef.current.addEventListener("click", onSkip);
-      }
-
-      // Don't arm scroll/key skip until the push notification appears (~4.2s).
-      // Earlier arming let trackpad noise kill the clock beat immediately.
-      const delayedListenerTimer = setTimeout(() => {
-        window.addEventListener("wheel", onWheelSkip, { passive: true });
-        window.addEventListener("keydown", onKeySkip);
-        window.addEventListener("touchstart", onTouchStart, { passive: true, capture: true });
-        window.addEventListener("touchmove", onTouchMoveSkip, { passive: true });
-      }, 4200);
-      timers.push(delayedListenerTimer);
+    if (skipBtnRef.current) {
+      skipBtnRef.current.addEventListener("click", onSkip);
     }
+
+    // Don't arm scroll/key skip until the push notification appears (~4.2s).
+    // Earlier arming let trackpad noise kill the clock beat immediately.
+    const delayedListenerTimer = setTimeout(() => {
+      window.addEventListener("wheel", onWheelSkip, { passive: true });
+      window.addEventListener("keydown", onKeySkip);
+      window.addEventListener("touchstart", onTouchStart, { passive: true, capture: true });
+      window.addEventListener("touchmove", onTouchMoveSkip, { passive: true });
+    }, 4200);
+    timers.push(delayedListenerTimer);
 
     // Always setup scrub listeners
     window.addEventListener("scroll", onScroll, { passive: true });
