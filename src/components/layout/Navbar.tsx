@@ -156,14 +156,14 @@ export function Navbar() {
             Pricing
           </a>
           <a
-            href="#download"
+            href="/beta"
             className={`px-[18px] py-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] transition-colors ${
               isDark
                 ? "bg-white text-map-depth hover:bg-n-200"
                 : "bg-text-primary text-white hover:bg-vv-blue-darker"
             }`}
           >
-            Get notified
+            Sign up for beta
           </a>
         </div>
       </div>
